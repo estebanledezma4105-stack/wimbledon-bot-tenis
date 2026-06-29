@@ -45,3 +45,23 @@ def test_run_writes_players_and_logs_success(tmp_path):
     assert [p["name"] for p in players] == ["Carlos Alcaraz", "Jannik Sinner", "Novak Djokovic"]
     assert run_log["status"] == "success"
     assert run_log["rows_fetched"] == 3
+
+
+def test_run_logs_failure_and_reraises_on_fetch_error(tmp_path):
+    db_path = str(tmp_path / "test.db")
+    db.init_db(db_path)
+
+    mock_session = MagicMock()
+    mock_session.get.side_effect = ConnectionError("network down")
+
+    try:
+        rankings.run(db_path, session=mock_session)
+        assert False, "expected ConnectionError to propagate"
+    except ConnectionError:
+        pass
+
+    with db.get_connection(db_path) as conn:
+        run_log = conn.execute("SELECT * FROM scraper_runs WHERE source = 'rankings'").fetchone()
+    assert run_log["status"] == "failure"
+    assert run_log["rows_fetched"] == 0
+    assert "network down" in run_log["error_message"]
