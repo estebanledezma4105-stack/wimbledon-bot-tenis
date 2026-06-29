@@ -107,18 +107,33 @@ def _now():
     return datetime.now(timezone.utc).isoformat()
 
 
-def upsert_player(db_path, name, elo=1500, ranking=None):
-    """Full overwrite on conflict: existing elo/ranking are replaced, not merged."""
+def upsert_player(db_path, name, elo=None, ranking=None):
+    """Create a player if missing (defaulting elo to 1500), or update an
+    existing one. `elo`/`ranking` left as None are NOT overwritten on an
+    existing row — only explicitly-supplied values replace the current ones.
+    This lets scrapers that only know player identity (draw, h2h, surface_stats)
+    upsert a player for id resolution without wiping out elo/ranking set by
+    the rankings scraper."""
     with get_connection(db_path) as conn:
-        cursor = conn.execute(
+        conn.execute(
             """INSERT INTO players (name, elo, ranking, last_updated) VALUES (?, ?, ?, ?)
-               ON CONFLICT(name) DO UPDATE SET elo = excluded.elo,
-                                                ranking = excluded.ranking,
-                                                last_updated = excluded.last_updated
-               RETURNING id""",
-            (name, elo, ranking, _now()),
+               ON CONFLICT(name) DO NOTHING""",
+            (name, elo if elo is not None else 1500, ranking, _now()),
         )
-        return cursor.fetchone()["id"]
+        if elo is not None or ranking is not None:
+            sets = []
+            params = []
+            if elo is not None:
+                sets.append("elo = ?")
+                params.append(elo)
+            if ranking is not None:
+                sets.append("ranking = ?")
+                params.append(ranking)
+            sets.append("last_updated = ?")
+            params.append(_now())
+            params.append(name)
+            conn.execute(f"UPDATE players SET {', '.join(sets)} WHERE name = ?", params)
+        return conn.execute("SELECT id FROM players WHERE name = ?", (name,)).fetchone()["id"]
 
 
 def get_player_by_name(db_path, name):

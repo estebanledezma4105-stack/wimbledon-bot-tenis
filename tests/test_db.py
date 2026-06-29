@@ -57,3 +57,23 @@ def test_upsert_player_updates_existing_player(test_db_path):
 def test_get_player_by_name_returns_none_if_missing(test_db_path):
     db.init_db(test_db_path)
     assert db.get_player_by_name(test_db_path, "Nobody") is None
+
+
+def test_upsert_player_preserves_elo_and_ranking_when_omitted(test_db_path):
+    """Regression test: a scraper that only knows player identity (e.g. the
+    draw scraper resolving names) must not wipe out elo/ranking set earlier
+    by the rankings scraper."""
+    db.init_db(test_db_path)
+    db.upsert_player(test_db_path, name="Carlos Alcaraz", elo=2100, ranking=2)
+    db.upsert_player(test_db_path, name="Carlos Alcaraz")
+    row = db.get_player_by_name(test_db_path, "Carlos Alcaraz")
+    assert row["elo"] == 2100
+    assert row["ranking"] == 2
+
+
+def test_upsert_player_defaults_elo_to_1500_for_brand_new_player(test_db_path):
+    db.init_db(test_db_path)
+    db.upsert_player(test_db_path, name="New Qualifier")
+    row = db.get_player_by_name(test_db_path, "New Qualifier")
+    assert row["elo"] == 1500
+    assert row["ranking"] is None
