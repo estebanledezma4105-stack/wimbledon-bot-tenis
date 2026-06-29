@@ -140,3 +140,18 @@ def get_player_by_name(db_path, name):
     with get_connection(db_path) as conn:
         row = conn.execute("SELECT * FROM players WHERE name = ?", (name,)).fetchone()
         return dict(row) if row else None
+
+
+def set_form_points(db_path, player_id, points):
+    with get_connection(db_path) as conn:
+        conn.execute(
+            """INSERT INTO form (player_id, points, last_updated) VALUES (?, ?, ?)
+               ON CONFLICT(player_id) DO UPDATE SET points = excluded.points, last_updated = excluded.last_updated""",
+            (player_id, points, _now()),
+        )
+
+
+def get_form_points(db_path, player_id):
+    with get_connection(db_path) as conn:
+        row = conn.execute("SELECT points FROM form WHERE player_id = ?", (player_id,)).fetchone()
+        return row["points"] if row else 0

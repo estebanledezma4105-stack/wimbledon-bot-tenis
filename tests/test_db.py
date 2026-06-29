@@ -77,3 +77,17 @@ def test_upsert_player_defaults_elo_to_1500_for_brand_new_player(test_db_path):
     row = db.get_player_by_name(test_db_path, "New Qualifier")
     assert row["elo"] == 1500
     assert row["ranking"] is None
+
+
+def test_set_and_get_form_points(test_db_path):
+    db.init_db(test_db_path)
+    player_id = db.upsert_player(test_db_path, name="Carlos Alcaraz")
+    db.set_form_points(test_db_path, player_id, points=4.5)
+    points = db.get_form_points(test_db_path, player_id)
+    assert points == 4.5
+
+
+def test_get_form_points_defaults_to_zero_when_missing(test_db_path):
+    db.init_db(test_db_path)
+    player_id = db.upsert_player(test_db_path, name="Novak Djokovic")
+    assert db.get_form_points(test_db_path, player_id) == 0
