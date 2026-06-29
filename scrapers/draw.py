@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 import db
 import name_resolver
-from scrapers import base
+from scrapers import base, h2h
 
 DRAW_TOURNAMENT_ID = "wimbledon"
 DRAW_YEAR = 2026
@@ -54,22 +54,40 @@ def _resolve_by_surname(db_path, raw_surname):
     return matches[0] if len(matches) == 1 else None
 
 
-def _resolve_or_fallback(db_path, raw_name, source):
-    return (
+def _resolve_via_external_search(session, raw_name):
+    """Last-resort fallback: ask tennisexplorer's own player-search endpoint
+    to turn a bare surname (no first name) into a real full name, even for
+    players not yet known anywhere in our database — e.g. qualifiers not in
+    the rankings/elo top lists. Reuses scrapers.h2h's verified search logic."""
+    if session is None:
+        return None
+    try:
+        result = h2h.search_player(session, raw_name)
+    except Exception:
+        return None
+    if result is None:
+        return None
+    base.jittered_sleep(0.3, 0.8)
+    return result["full_name"]
+
+
+def _resolve_or_fallback(db_path, raw_name, source, session=None):
+    canonical = (
         name_resolver.resolve(db_path, raw_name, source)
         or _resolve_by_surname(db_path, raw_name)
-        or raw_name
+        or _resolve_via_external_search(session, raw_name)
     )
+    return canonical or raw_name
 
 
-def _store_match(db_path, entry):
-    p1_canonical = _resolve_or_fallback(db_path, entry["player1"], source="wimbledon")
-    p2_canonical = _resolve_or_fallback(db_path, entry["player2"], source="wimbledon")
+def _store_match(db_path, entry, session=None):
+    p1_canonical = _resolve_or_fallback(db_path, entry["player1"], source="wimbledon", session=session)
+    p2_canonical = _resolve_or_fallback(db_path, entry["player2"], source="wimbledon", session=session)
     p1_id = db.upsert_player(db_path, name=p1_canonical)
     p2_id = db.upsert_player(db_path, name=p2_canonical)
     winner_id = None
     if entry["winner"]:
-        winner_canonical = _resolve_or_fallback(db_path, entry["winner"], source="wimbledon")
+        winner_canonical = _resolve_or_fallback(db_path, entry["winner"], source="wimbledon", session=session)
         winner_id = db.upsert_player(db_path, name=winner_canonical)
 
     with db.get_connection(db_path) as conn:
@@ -171,7 +189,7 @@ def run_from_tennisexplorer(db_path, url=TENNISEXPLORER_DRAW_URL, session=None):
         html = base.fetch_with_retry(_fetch)
         parsed = parse_draw_html(html)
         for entry in parsed:
-            _store_match(db_path, entry)
+            _store_match(db_path, entry, session=session)
             base.jittered_sleep(0.1, 0.3)
         base.log_scraper_run(db_path, "draw_tennisexplorer", "success", rows_fetched=len(parsed), started_at=started_at)
         return len(parsed)

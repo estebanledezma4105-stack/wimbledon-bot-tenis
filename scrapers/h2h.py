@@ -28,22 +28,42 @@ SEARCH_ENDPOINT = "https://www.tennisexplorer.com/res/ajax/search.php"
 MUTUAL_URL_TEMPLATE = "https://www.tennisexplorer.com/mutual/{slug1}/{slug2}/"
 
 
-def search_player_slug(session, name, sex="man"):
-    """Returns the tennisexplorer URL slug for a player name, or None if no
-    (or still-ambiguous) result. Searching with a full "Firstname Lastname"
-    query disambiguates same-surname players (e.g. the Zverev siblings).
+def search_player(session, name, sex="man"):
+    """Queries the real tennisexplorer player-search endpoint and returns the
+    single unambiguous match as {"slug": ..., "full_name": "Firstname Lastname"},
+    or None if there's no result or it's still ambiguous after the sex filter.
+
+    Searching with a full "Firstname Lastname" query disambiguates same-surname
+    players (e.g. the Zverev siblings) — verified against the live site.
     `sex` filters cross-gender surname collisions (e.g. a man and woman both
     surnamed "Hurkacz") before falling back to treating multiple remaining
-    results as ambiguous — pass sex=None to skip this filter."""
+    results as ambiguous — pass sex=None to skip this filter. Also usable to
+    resolve a bare surname (no first name) to a full name for sources, like
+    the draw scraper, that only have a surname to begin with."""
     response = session.get(SEARCH_ENDPOINT, params={"s": name, "t": "p", "c": ""}, timeout=10)
     response.raise_for_status()
     payload = response.json()
-    links = payload.get("links", [])
+    links = [link for link in payload.get("links", []) if link.get("type") == "p"]
     if sex is not None and len(links) > 1:
         sex_filtered = [link for link in links if link.get("sex") == sex]
         if len(sex_filtered) == 1:
-            return sex_filtered[0]["url"]
-    return links[0]["url"] if len(links) == 1 else None
+            links = sex_filtered
+    if len(links) != 1:
+        return None
+    return {"slug": links[0]["url"], "full_name": _parse_full_name(links[0]["name"])}
+
+
+def _parse_full_name(name_field):
+    """tennisexplorer search results format names as "Lastname, Firstname (CTY)"."""
+    last, _, rest = name_field.partition(",")
+    first = rest.split("(")[0].strip()
+    return f"{first} {last.strip()}" if first else last.strip()
+
+
+def search_player_slug(session, name, sex="man"):
+    """Backwards-compatible wrapper around search_player() returning just the slug."""
+    result = search_player(session, name, sex=sex)
+    return result["slug"] if result else None
 
 
 def _find_h2h_table(soup):
