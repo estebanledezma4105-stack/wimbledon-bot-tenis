@@ -1,9 +1,20 @@
-"""Wimbledon draw scraper — consumes the site's internal JSON endpoint directly
-(SPA sites like wimbledon.com are Cloudflare-protected and React/Next.js-based;
-parsing the DOM is unreliable). If the endpoint disappears, fall back to
-Playwright-rendered HTML before resorting to static parsing.
+"""Wimbledon draw scraper.
+
+Two data sources are supported:
+1. `run()` — consumes wimbledon.com's internal JSON endpoint directly (SPA
+   sites are Cloudflare-protected and React/Next.js-based; parsing the DOM
+   is unreliable). The endpoint below is still a placeholder pending network
+   inspection of the live site.
+2. `run_from_tennisexplorer()` — scrapes tennisexplorer.com's tournament
+   match-list page instead, which is real and working today. This page only
+   lists surnames (no first name), so name resolution falls back to a
+   surname-only lookup against already-known players when the normal
+   resolver (seed dict + fuzzy match on full names) can't find a match.
 """
+import re
 from datetime import datetime, timezone
+
+from bs4 import BeautifulSoup
 
 import db
 import name_resolver
@@ -12,6 +23,7 @@ from scrapers import base
 DRAW_TOURNAMENT_ID = "wimbledon"
 DRAW_YEAR = 2026
 DRAW_ENDPOINT = "https://www.wimbledon.com/en_GB/api/draw.json"  # placeholder, confirm via network inspection
+TENNISEXPLORER_DRAW_URL = "https://www.tennisexplorer.com/wimbledon/2026/atp-men/"
 
 
 def parse_draw_json(payload):
@@ -29,14 +41,34 @@ def parse_draw_json(payload):
     return results
 
 
+def _resolve_by_surname(db_path, raw_surname):
+    """Fallback for sources (like tennisexplorer's match-list page) that only
+    give a surname. Only resolves if exactly one known player has that
+    surname — an ambiguous match (e.g. two Zverevs) falls through to the
+    caller's normal fallback instead of guessing wrong."""
+    with db.get_connection(db_path) as conn:
+        rows = conn.execute("SELECT name FROM players").fetchall()
+    raw_lower = raw_surname.strip().lower()
+    matches = [row["name"] for row in rows if row["name"].lower().split()[-1] == raw_lower]
+    return matches[0] if len(matches) == 1 else None
+
+
+def _resolve_or_fallback(db_path, raw_name, source):
+    return (
+        name_resolver.resolve(db_path, raw_name, source)
+        or _resolve_by_surname(db_path, raw_name)
+        or raw_name
+    )
+
+
 def _store_match(db_path, entry):
-    p1_canonical = name_resolver.resolve(db_path, entry["player1"], source="wimbledon") or entry["player1"]
-    p2_canonical = name_resolver.resolve(db_path, entry["player2"], source="wimbledon") or entry["player2"]
+    p1_canonical = _resolve_or_fallback(db_path, entry["player1"], source="wimbledon")
+    p2_canonical = _resolve_or_fallback(db_path, entry["player2"], source="wimbledon")
     p1_id = db.upsert_player(db_path, name=p1_canonical)
     p2_id = db.upsert_player(db_path, name=p2_canonical)
     winner_id = None
     if entry["winner"]:
-        winner_canonical = name_resolver.resolve(db_path, entry["winner"], source="wimbledon") or entry["winner"]
+        winner_canonical = _resolve_or_fallback(db_path, entry["winner"], source="wimbledon")
         winner_id = db.upsert_player(db_path, name=winner_canonical)
 
     with db.get_connection(db_path) as conn:
@@ -58,6 +90,74 @@ def _store_match(db_path, entry):
                    VALUES (?, ?, ?, ?, ?, ?, ?)""",
                 (DRAW_TOURNAMENT_ID, DRAW_YEAR, entry["round"], p1_id, p2_id, winner_id, entry["completed_at"]),
             )
+
+
+_SEED_SUFFIX_RE = re.compile(r"\s*\(\d+\)\s*")
+
+
+def _find_match_table(soup):
+    for table in soup.find_all("table", class_="result"):
+        header = table.find("tr", class_="head")
+        if header is None:
+            continue
+        if header.find("td", class_="round") is not None:
+            return table
+    return None
+
+
+def parse_draw_html(html):
+    soup = BeautifulSoup(html, "html.parser")
+    table = _find_match_table(soup)
+    if table is None:
+        return []
+    results = []
+    for row in table.find_all("tr"):
+        if "head" in (row.get("class") or []):
+            continue
+        round_cell = row.find("td", class_="round")
+        name_cell = row.find("td", class_="t-name")
+        if round_cell is None or name_cell is None:
+            continue
+        raw_text = name_cell.get_text(" ", strip=True)
+        if " - " not in raw_text:
+            continue
+        p1_raw, p2_raw = raw_text.split(" - ", 1)
+        player1 = _SEED_SUFFIX_RE.sub(" ", p1_raw).strip()
+        player2 = _SEED_SUFFIX_RE.sub(" ", p2_raw).strip()
+        if not player1 or not player2:
+            continue
+        results.append({
+            "round": round_cell.get_text(strip=True),
+            "player1": player1,
+            "player2": player2,
+            "winner": None,
+            "completed_at": None,
+        })
+    return results
+
+
+def run_from_tennisexplorer(db_path, url=TENNISEXPLORER_DRAW_URL, session=None):
+    """Alternative to run(): scrapes tennisexplorer.com's match-list page
+    instead of wimbledon.com's (still-unconfirmed) JSON endpoint."""
+    started_at = datetime.now(timezone.utc).isoformat()
+    session = session or base.get_session()
+
+    def _fetch():
+        response = session.get(url, timeout=10)
+        response.raise_for_status()
+        return response.text
+
+    try:
+        html = base.fetch_with_retry(_fetch)
+        parsed = parse_draw_html(html)
+        for entry in parsed:
+            _store_match(db_path, entry)
+            base.jittered_sleep(0.1, 0.3)
+        base.log_scraper_run(db_path, "draw_tennisexplorer", "success", rows_fetched=len(parsed), started_at=started_at)
+        return len(parsed)
+    except Exception as exc:
+        base.log_scraper_run(db_path, "draw_tennisexplorer", "failure", rows_fetched=0, error_message=str(exc), started_at=started_at)
+        raise
 
 
 def run(db_path, session=None):
