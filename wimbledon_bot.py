@@ -140,19 +140,28 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode='Markdown'
     )
 
+def _resolve_player_name(typed_name, elo_dict):
+    """Case-insensitive lookup of a user-typed name against the canonical
+    (scraped, mixed-case) names used as keys in load_all_data()'s dicts."""
+    lower_to_canonical = {name.lower(): name for name in elo_dict}
+    return lower_to_canonical.get(typed_name.strip().lower())
+
+
 async def cmd_predict(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         texto = update.message.text.split(' ', 1)[1]
         players = texto.split(' vs ')
         if len(players) != 2:
             raise ValueError
-        a, b = players[0].strip().lower(), players[1].strip().lower()
+        typed_a, typed_b = players[0], players[1]
     except:
         await update.message.reply_text("Formato: /predict Nadal vs Djokovic")
         return
 
     data = data_db.load_all_data(DB_PATH)
-    if a not in data['elo'] or b not in data['elo']:
+    a = _resolve_player_name(typed_a, data['elo'])
+    b = _resolve_player_name(typed_b, data['elo'])
+    if a is None or b is None:
         await update.message.reply_text("Uno de los jugadores no está en la base de datos.")
         return
 
@@ -168,13 +177,14 @@ async def cmd_predict(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def cmd_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        player = update.message.text.split(' ', 1)[1].strip().lower()
+        typed_player = update.message.text.split(' ', 1)[1]
     except:
         await update.message.reply_text("Formato: /stats Alcaraz")
         return
 
     data = data_db.load_all_data(DB_PATH)
-    if player not in data['elo']:
+    player = _resolve_player_name(typed_player, data['elo'])
+    if player is None:
         await update.message.reply_text("Jugador no encontrado.")
         return
 
