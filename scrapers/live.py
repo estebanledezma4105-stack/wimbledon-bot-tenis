@@ -69,6 +69,21 @@ def _find_tournament_rows(soup, tournament_url_fragment):
     return []
 
 
+def _format_score_cell(cell):
+    """tennisexplorer renders a tiebreak set score as e.g. <td>6<sup>7</sup></td>
+    — the main game count plus the tiebreak loser's points in a nested <sup>.
+    Naive get_text(strip=True) concatenates them into an ambiguous plain
+    number (e.g. "67", or "612" for a 12-point breaker) — formats it instead
+    as "6(7)"."""
+    sup = cell.find("sup")
+    if sup is None:
+        return cell.get_text(strip=True)
+    tiebreak_points = sup.get_text(strip=True)
+    sup.extract()
+    main_score = cell.get_text(strip=True)
+    return f"{main_score}({tiebreak_points})"
+
+
 def _format_sets(p1_scores, p2_scores):
     parts = []
     for a, b in zip(p1_scores, p2_scores):
@@ -100,7 +115,7 @@ def parse_live_html(html, tournament_url_fragment="/wimbledon/2026/atp-men/"):
         except ValueError:
             continue
         name = _SEED_SUFFIX_RE.sub(" ", name_cell.get_text(strip=True)).strip()
-        scores = [c.get_text(strip=True) for c in row.find_all("td", class_="score")]
+        scores = [_format_score_cell(c) for c in row.find_all("td", class_="score")]
         is_first_row_of_pair = row.find("td", class_="first") is not None
 
         if is_first_row_of_pair:

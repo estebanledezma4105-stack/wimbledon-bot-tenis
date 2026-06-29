@@ -164,3 +164,21 @@ def test_run_from_tennisexplorer_logs_failure_and_reraises_on_fetch_error(tmp_pa
         ).fetchone()
     assert run_log["status"] == "failure"
     assert run_log["rows_fetched"] == 0
+
+
+def test_parse_live_html_formats_tiebreak_scores_correctly():
+    """Regression test: tennisexplorer renders a tiebreak set score as
+    e.g. <td>6<sup>7</sup></td> (main games + nested tiebreak loser points).
+    Plain get_text(strip=True) concatenates them into an ambiguous number
+    like "67" or "612" for a 12-point breaker — must format as "6(7)"."""
+    html = """<table>
+      <tr class="head flags"><td><a href="/wimbledon/2026/atp-men/">Wimbledon</a></td></tr>
+      <tr class="one"><td class="first time">12:00</td><td class="t-name">A.</td>
+          <td class="result">3</td><td class="score">7</td><td class="score">6<sup>7</sup></td></tr>
+      <tr class="one"><td class="t-name">B.</td>
+          <td class="result">0</td><td class="score">6<sup>7</sup></td><td class="score">7</td></tr>
+    </table>"""
+    parsed = live.parse_live_html(html)
+    assert parsed == [
+        {"player1": "A.", "player2": "B.", "sets": "7-6(7), 6(7)-7", "status": "finished"},
+    ]
