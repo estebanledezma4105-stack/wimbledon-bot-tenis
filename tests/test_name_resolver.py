@@ -20,6 +20,18 @@ def test_resolve_does_not_merge_similar_but_distinct_siblings(tmp_path):
     assert a != m
 
 
+def test_resolve_fuzzy_path_does_not_merge_unseeded_zverev_variant(tmp_path):
+    """Forces the rapidfuzz path (not the seed dict) for a Zverev variant that
+    isn't in the seed file, against a DB already containing both siblings.
+    Must not cross-resolve to the wrong sibling."""
+    db_path = str(tmp_path / "test.db")
+    db.init_db(db_path)
+    db.upsert_player(db_path, name="Alexander Zverev")
+    db.upsert_player(db_path, name="Mischa Zverev")
+    resolved = name_resolver.resolve(db_path, "Zverev A.", source="tennisexplorer")
+    assert resolved != "Mischa Zverev"
+
+
 def test_resolve_unknown_name_below_threshold_goes_to_unresolved(tmp_path):
     db_path = str(tmp_path / "test.db")
     db.init_db(db_path)
