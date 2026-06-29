@@ -46,6 +46,8 @@ W_GRASS = 1.5       # Peso del bonus por especialidad en hierba
 W_FORM = 0.7        # Peso del factor de forma reciente
 W_H2H = 25          # Peso del historial H2H
 DAYS_FORM = 30      # Ventana de forma reciente
+W_FATIGUE = 0.15    # Peso de la penalización por fatiga (partidos largos recientes)
+FATIGUE_BASELINE_GAMES = 24  # juegos "normales" en una victoria 2-0 sin sets largos
 
 # ===================== MODELO PREDICTIVO =====================
 def win_probability(rating_a, rating_b):
@@ -82,20 +84,32 @@ def get_h2h_bonus(player_a, player_b, h2h_data):
         b_wins = record.get('a_wins', 0)
     return W_H2H * (math.log(1 + a_wins) - math.log(1 + b_wins))
 
-def calculate_rating(player_id, opponent_id, elo_dict, grass_stats, form_data, h2h_data):
+def get_fatigue_bonus(player_id, fatigue_data):
+    """P(X) = -w_fatigue * max(0, juegos_ultimo_partido - linea_base)
+
+    Penaliza levemente a un jugador que viene de un partido largo (ej. un
+    5 sets reñido) frente a uno que tuvo una victoria rápida, usando los
+    juegos totales jugados en su partido más reciente (dato real, no
+    estimado) como proxy de desgaste físico."""
+    games = fatigue_data.get(player_id, 0)
+    return -W_FATIGUE * max(0, games - FATIGUE_BASELINE_GAMES)
+
+def calculate_rating(player_id, opponent_id, elo_dict, grass_stats, form_data, h2h_data, fatigue_data=None):
     elo = elo_dict.get(player_id, 1500)
     grass = get_grass_bonus(player_id, grass_stats)
     form = get_form_bonus(player_id, form_data)
     h2h = get_h2h_bonus(player_id, opponent_id, h2h_data)
-    return elo + grass + form + h2h
+    fatigue = get_fatigue_bonus(player_id, fatigue_data or {})
+    return elo + grass + form + h2h + fatigue
 
 def predict_match(player_a, player_b, data):
     elo = data['elo']
     grass = data['grass_stats']
     form = data['form']
     h2h = data['h2h']
-    r_a = calculate_rating(player_a, player_b, elo, grass, form, h2h)
-    r_b = calculate_rating(player_b, player_a, elo, grass, form, h2h)
+    fatigue = data.get('fatigue', {})
+    r_a = calculate_rating(player_a, player_b, elo, grass, form, h2h, fatigue)
+    r_b = calculate_rating(player_b, player_a, elo, grass, form, h2h, fatigue)
     prob_a = win_probability(r_a, r_b)
     return {
         'player_a': player_a,

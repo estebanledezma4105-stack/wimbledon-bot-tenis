@@ -170,6 +170,37 @@ def get_form_points(db_path, player_id):
         return row["points"] if row else 0
 
 
+def _total_games_played(sets_str):
+    """Sums total games across all sets in a formatted string like
+    "6-3, 7-6(7), 4-6" (see scrapers/live.py's _format_sets)."""
+    total = 0
+    for part in (sets_str or "").split(","):
+        part = part.strip()
+        if "-" not in part:
+            continue
+        a_raw, b_raw = part.split("-", 1)
+        try:
+            total += int(a_raw.split("(")[0]) + int(b_raw.split("(")[0])
+        except ValueError:
+            continue
+    return total
+
+
+def get_games_played_in_last_match(db_path, player_id):
+    """Total games played in a player's most recently finished match in this
+    tournament — a proxy for physical fatigue heading into their next match
+    (a grueling 5-setter leaves a player more spent than a quick sweep)."""
+    with get_connection(db_path) as conn:
+        row = conn.execute(
+            """SELECT ls.sets FROM live_scores ls
+               JOIN draw_matches dm ON dm.id = ls.match_id
+               WHERE ls.status = 'finished' AND (dm.player1_id = ? OR dm.player2_id = ?)
+               ORDER BY ls.match_id DESC LIMIT 1""",
+            (player_id, player_id),
+        ).fetchone()
+    return _total_games_played(row["sets"]) if row else 0
+
+
 def load_all_data(db_path):
     with get_connection(db_path) as conn:
         players = conn.execute("SELECT id, name, elo FROM players").fetchall()
@@ -231,6 +262,7 @@ def load_all_data(db_path):
             "h2h": h2h,
             "draw": {"matches": matches, "completed_matches": [m for m in matches if m["winner"]]},
             "live_scores": live_scores,
+            "fatigue": {p["name"]: get_games_played_in_last_match(db_path, p["id"]) for p in players},
         }
 
 

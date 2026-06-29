@@ -123,3 +123,44 @@ def test_load_all_data_includes_scheduled_date_per_match(test_db_path):
     data = db.load_all_data(test_db_path)
     match = data["draw"]["matches"][0]
     assert match["scheduled_date"] == "2026-06-29"
+
+
+def test_total_games_played_sums_across_sets_with_tiebreaks():
+    assert db._total_games_played("6-3, 7-6(7), 4-6") == 6 + 3 + 7 + 6 + 4 + 6
+
+
+def test_total_games_played_handles_empty_string():
+    assert db._total_games_played("") == 0
+
+
+def test_get_games_played_in_last_match_returns_zero_without_finished_match(test_db_path):
+    db.init_db(test_db_path)
+    player_id = db.upsert_player(test_db_path, name="Carlos Alcaraz")
+    assert db.get_games_played_in_last_match(test_db_path, player_id) == 0
+
+
+def test_get_games_played_in_last_match_reads_finished_match(test_db_path):
+    db.init_db(test_db_path)
+    p1 = db.upsert_player(test_db_path, name="Carlos Alcaraz")
+    p2 = db.upsert_player(test_db_path, name="Mark Newcomer")
+    with db.get_connection(test_db_path) as conn:
+        cursor = conn.execute(
+            """INSERT INTO draw_matches (tournament_id, year, round, player1_id, player2_id)
+               VALUES ('wimbledon', 2026, '1R', ?, ?)""",
+            (p1, p2),
+        )
+        match_id = cursor.lastrowid
+        conn.execute(
+            "INSERT INTO live_scores (match_id, sets, status, updated_at) VALUES (?, ?, 'finished', '')",
+            (match_id, "7-6(7), 6(5)-7, 7-6(2), 7-6(5)"),
+        )
+    games = db.get_games_played_in_last_match(test_db_path, p1)
+    assert games == db._total_games_played("7-6(7), 6(5)-7, 7-6(2), 7-6(5)")
+    assert db.get_games_played_in_last_match(test_db_path, p2) == games
+
+
+def test_load_all_data_includes_fatigue_per_player(test_db_path):
+    db.init_db(test_db_path)
+    player_id = db.upsert_player(test_db_path, name="Carlos Alcaraz")
+    data = db.load_all_data(test_db_path)
+    assert data["fatigue"]["Carlos Alcaraz"] == 0

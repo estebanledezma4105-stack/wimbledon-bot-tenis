@@ -122,3 +122,28 @@ def test_live_status_labels_have_no_underscore():
     display label before formatting, never send the raw value."""
     for raw_status, label in wimbledon_bot._LIVE_STATUS_LABELS.items():
         assert "_" not in label, f"{raw_status!r} maps to {label!r}, which still contains an underscore"
+
+
+def test_get_fatigue_bonus_penalizes_games_above_baseline():
+    fatigue_data = {"Tired Player": 38, "Fresh Player": 18}
+    tired_bonus = wimbledon_bot.get_fatigue_bonus("Tired Player", fatigue_data)
+    fresh_bonus = wimbledon_bot.get_fatigue_bonus("Fresh Player", fatigue_data)
+    assert tired_bonus < 0
+    assert fresh_bonus == 0
+    assert tired_bonus == -wimbledon_bot.W_FATIGUE * (38 - wimbledon_bot.FATIGUE_BASELINE_GAMES)
+
+
+def test_get_fatigue_bonus_defaults_to_zero_for_unknown_player():
+    assert wimbledon_bot.get_fatigue_bonus("Nobody", {}) == 0
+
+
+def test_predict_match_favors_fresher_player_when_elo_is_equal():
+    data = {
+        "elo": {"Tired Player": 1800, "Fresh Player": 1800},
+        "grass_stats": {},
+        "form": {},
+        "h2h": {},
+        "fatigue": {"Tired Player": 40, "Fresh Player": 18},
+    }
+    pred = wimbledon_bot.predict_match("Tired Player", "Fresh Player", data)
+    assert pred["favorite"] == "Fresh Player"
