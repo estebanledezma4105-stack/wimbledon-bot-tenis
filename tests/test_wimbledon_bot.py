@@ -90,12 +90,25 @@ def test_load_dotenv_missing_file_does_not_raise(tmp_path):
     wimbledon_bot._load_dotenv(str(tmp_path / "does_not_exist.env"))
 
 
-def test_cmd_partidos_filters_to_pending_matches_only():
+def test_cmd_partidos_filters_to_todays_pending_matches_only():
+    """Regression test: /partidos must show only matches scheduled for the
+    real current date, not every pending match ever scraped (which would
+    accumulate future/past rounds once the tournament moves past day 1)."""
+    today_str = "2026-06-29"
     matches = [
-        {"player1": "Carlos Alcaraz", "player2": "Mark Newcomer", "winner": "Carlos Alcaraz"},
-        {"player1": "Novak Djokovic", "player2": "Jane Qualifier", "winner": None},
+        {"player1": "Carlos Alcaraz", "player2": "Mark Newcomer",
+         "winner": "Carlos Alcaraz", "scheduled_date": today_str},
+        {"player1": "Novak Djokovic", "player2": "Jane Qualifier",
+         "winner": None, "scheduled_date": today_str},
+        {"player1": "Future Player", "player2": "Other Future Player",
+         "winner": None, "scheduled_date": "2026-07-01"},
+        {"player1": "No Date Player", "player2": "Another No Date",
+         "winner": None, "scheduled_date": None},
     ]
-    pending = [m for m in matches if not m["winner"]]
-    assert pending == [
-        {"player1": "Novak Djokovic", "player2": "Jane Qualifier", "winner": None},
+    todays_matches = [
+        m for m in matches if m.get("scheduled_date") == today_str and not m["winner"]
+    ]
+    assert todays_matches == [
+        {"player1": "Novak Djokovic", "player2": "Jane Qualifier",
+         "winner": None, "scheduled_date": today_str},
     ]

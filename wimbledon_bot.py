@@ -7,6 +7,7 @@ Ejecutar: python wimbledon_bot.py
 import math
 import os
 import logging
+from datetime import date
 
 import db as data_db
 
@@ -245,19 +246,21 @@ async def cmd_draw(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(resp, parse_mode='Markdown')
 
 async def cmd_partidos(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Predicciones de los partidos aún sin resultado.
-
-    El esquema actual no guarda la fecha programada de cada partido (solo
-    ronda y si ya se completó), así que "partidos del día" se aproxima como
-    "partidos pendientes" hasta que se agregue una columna de fecha al draw."""
+    """Predicciones de los partidos programados para HOY (fecha real, no
+    'todos los pendientes'). El scraper de draw marca cada partido con la
+    fecha del día en que fue scrapeado como 'today' en tennisexplorer.com;
+    cada nueva ronda que se scrapee en su propio día queda con su propia
+    fecha, así que este comando muestra automáticamente solo la ronda
+    vigente cada día del torneo, sin acumular rondas pasadas o futuras."""
     data = data_db.load_all_data(DB_PATH)
     matches = data['draw'].get('matches', [])
-    pending = [m for m in matches if not m['winner']]
-    if not pending:
-        await update.message.reply_text("No hay partidos pendientes por ahora.")
+    today_str = date.today().isoformat()
+    todays_matches = [m for m in matches if m.get('scheduled_date') == today_str and not m['winner']]
+    if not todays_matches:
+        await update.message.reply_text("No hay partidos programados para hoy todavía.")
         return
-    resp = "🎾 *Predicciones de partidos pendientes:*\n\n"
-    for m in pending:
+    resp = "🎾 *Predicciones de hoy:*\n\n"
+    for m in todays_matches:
         p1, p2 = m['player1'], m['player2']
         pred = predict_match(p1, p2, data)
         prob = max(pred['prob_a'], pred['prob_b']) * 100

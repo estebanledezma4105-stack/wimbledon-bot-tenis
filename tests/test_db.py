@@ -107,3 +107,19 @@ def test_load_all_data_returns_expected_shape(test_db_path):
     assert "Novak Djokovic" not in data["form"] or data["form"]["Novak Djokovic"] == 0
     assert isinstance(data["grass_stats"], dict)
     assert isinstance(data["h2h"], dict)
+
+
+def test_load_all_data_includes_scheduled_date_per_match(test_db_path):
+    db.init_db(test_db_path)
+    p1 = db.upsert_player(test_db_path, name="Carlos Alcaraz")
+    p2 = db.upsert_player(test_db_path, name="Novak Djokovic")
+    with db.get_connection(test_db_path) as conn:
+        conn.execute(
+            """INSERT INTO draw_matches (tournament_id, year, round, player1_id, player2_id, scheduled_date)
+               VALUES ('wimbledon', 2026, '1R', ?, ?, '2026-06-29')""",
+            (p1, p2),
+        )
+
+    data = db.load_all_data(test_db_path)
+    match = data["draw"]["matches"][0]
+    assert match["scheduled_date"] == "2026-06-29"

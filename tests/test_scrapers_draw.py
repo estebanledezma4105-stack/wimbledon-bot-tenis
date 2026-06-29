@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import date
 from unittest.mock import MagicMock
 
 import db
@@ -15,9 +16,9 @@ def test_parse_draw_json_normalizes_fields():
     parsed = draw.parse_draw_json(payload)
     assert parsed == [
         {"round": "R1", "player1": "Carlos Alcaraz", "player2": "Mark Newcomer",
-         "winner": "Carlos Alcaraz", "completed_at": "2026-06-29T15:00:00Z"},
+         "winner": "Carlos Alcaraz", "completed_at": "2026-06-29T15:00:00Z", "scheduled_date": None},
         {"round": "R1", "player1": "Novak Djokovic", "player2": "Jane Qualifier",
-         "winner": None, "completed_at": None},
+         "winner": None, "completed_at": None, "scheduled_date": None},
     ]
 
 
@@ -50,12 +51,25 @@ def test_store_match_inserts_then_updates(tmp_path):
 def test_parse_draw_html_extracts_matches_and_strips_seed_numbers():
     with open(TENNISEXPLORER_FIXTURE_PATH, "r", encoding="utf-8") as f:
         html = f.read()
-    parsed = draw.parse_draw_html(html)
+    fixed_today = date(2026, 6, 29)
+    parsed = draw.parse_draw_html(html, today=fixed_today)
     assert parsed == [
         {"round": "1R", "player1": "Rublev", "player2": "Safiullin",
-         "winner": None, "completed_at": None},
+         "winner": None, "completed_at": None, "scheduled_date": "2026-06-29"},
         {"round": "1R", "player1": "Trungelliti", "player2": "Damm",
-         "winner": None, "completed_at": None},
+         "winner": None, "completed_at": None, "scheduled_date": "2026-06-29"},
+    ]
+
+
+def test_extract_scheduled_date_returns_none_for_non_today_label():
+    html = """<table class="result"><tr class="head"><td class="round">Round</td></tr>
+              <tr><td class="time">tomorrow , 12:00</td><td class="round">1R</td>
+              <td class="t-name">Foo - Bar</td></tr></table>"""
+    fixed_today = date(2026, 6, 29)
+    parsed = draw.parse_draw_html(html, today=fixed_today)
+    assert parsed == [
+        {"round": "1R", "player1": "Foo", "player2": "Bar",
+         "winner": None, "completed_at": None, "scheduled_date": None},
     ]
 
 

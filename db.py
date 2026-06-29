@@ -54,7 +54,8 @@ CREATE TABLE IF NOT EXISTS draw_matches (
     player1_id INTEGER NOT NULL REFERENCES players(id),
     player2_id INTEGER NOT NULL REFERENCES players(id),
     winner_id INTEGER REFERENCES players(id),
-    completed_at TEXT
+    completed_at TEXT,
+    scheduled_date TEXT
 );
 
 CREATE TABLE IF NOT EXISTS live_scores (
@@ -101,6 +102,11 @@ def get_connection(db_path):
 def init_db(db_path):
     with get_connection(db_path) as conn:
         conn.executescript(SCHEMA)
+        # Migration for databases created before scheduled_date existed.
+        try:
+            conn.execute("ALTER TABLE draw_matches ADD COLUMN scheduled_date TEXT")
+        except sqlite3.OperationalError:
+            pass  # column already exists
 
 
 def _now():
@@ -189,7 +195,7 @@ def load_all_data(db_path):
                 h2h[str((name_a, name_b))] = {"a_wins": row["a_wins"], "b_wins": row["b_wins"]}
 
         draw_rows = conn.execute(
-            "SELECT round, player1_id, player2_id, winner_id FROM draw_matches"
+            "SELECT round, player1_id, player2_id, winner_id, scheduled_date FROM draw_matches"
         ).fetchall()
         matches = []
         for row in draw_rows:
@@ -197,7 +203,8 @@ def load_all_data(db_path):
             p2_name = id_to_name.get(row["player2_id"])
             if p1_name and p2_name:
                 matches.append({"player1": p1_name, "player2": p2_name,
-                                 "winner": id_to_name.get(row["winner_id"])})
+                                 "winner": id_to_name.get(row["winner_id"]),
+                                 "scheduled_date": row["scheduled_date"]})
 
         live_rows = conn.execute(
             """SELECT dm.player1_id, dm.player2_id, ls.sets, ls.status

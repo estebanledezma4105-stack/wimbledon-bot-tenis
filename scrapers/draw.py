@@ -12,7 +12,7 @@ Two data sources are supported:
    resolver (seed dict + fuzzy match on full names) can't find a match.
 """
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 from bs4 import BeautifulSoup
 
@@ -37,6 +37,7 @@ def parse_draw_json(payload):
             "player2": entry["player2"],
             "winner": entry.get("winner"),
             "completed_at": entry.get("completedAt"),
+            "scheduled_date": entry.get("scheduledDate"),
         })
     return results
 
@@ -78,17 +79,20 @@ def _store_match(db_path, entry):
                AND player1_id = ? AND player2_id = ?""",
             (DRAW_TOURNAMENT_ID, DRAW_YEAR, entry["round"], p1_id, p2_id),
         ).fetchone()
+        scheduled_date = entry.get("scheduled_date")
         if existing:
             conn.execute(
-                "UPDATE draw_matches SET winner_id = ?, completed_at = ? WHERE id = ?",
-                (winner_id, entry["completed_at"], existing["id"]),
+                """UPDATE draw_matches SET winner_id = ?, completed_at = ?,
+                       scheduled_date = COALESCE(?, scheduled_date) WHERE id = ?""",
+                (winner_id, entry["completed_at"], scheduled_date, existing["id"]),
             )
         else:
             conn.execute(
                 """INSERT INTO draw_matches
-                   (tournament_id, year, round, player1_id, player2_id, winner_id, completed_at)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
-                (DRAW_TOURNAMENT_ID, DRAW_YEAR, entry["round"], p1_id, p2_id, winner_id, entry["completed_at"]),
+                   (tournament_id, year, round, player1_id, player2_id, winner_id, completed_at, scheduled_date)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                (DRAW_TOURNAMENT_ID, DRAW_YEAR, entry["round"], p1_id, p2_id, winner_id,
+                 entry["completed_at"], scheduled_date),
             )
 
 
@@ -105,7 +109,22 @@ def _find_match_table(soup):
     return None
 
 
-def parse_draw_html(html):
+def _extract_scheduled_date(row, today=None):
+    """tennisexplorer.com's "Start" column reads "today , 12:00" for matches
+    happening today, or a different label for other days. Only the "today"
+    case is resolved to a real calendar date here — matches scheduled for
+    other days are intentionally left with scheduled_date=None rather than
+    guessed, so they don't get misfiled into "today" by a parsing mistake."""
+    time_cell = row.find("td", class_="time")
+    if time_cell is None:
+        return None
+    text = time_cell.get_text(" ", strip=True).lower()
+    if text.startswith("today"):
+        return (today or date.today()).isoformat()
+    return None
+
+
+def parse_draw_html(html, today=None):
     soup = BeautifulSoup(html, "html.parser")
     table = _find_match_table(soup)
     if table is None:
@@ -132,6 +151,7 @@ def parse_draw_html(html):
             "player2": player2,
             "winner": None,
             "completed_at": None,
+            "scheduled_date": _extract_scheduled_date(row, today=today),
         })
     return results
 
