@@ -31,3 +31,29 @@ def test_init_db_is_idempotent(test_db_path):
     tables = {row[0] for row in cursor.fetchall()}
     assert "players" in tables
     conn.close()
+
+
+def test_upsert_player_creates_new_player(test_db_path):
+    db.init_db(test_db_path)
+    player_id = db.upsert_player(test_db_path, name="Carlos Alcaraz", elo=2100, ranking=2)
+    with db.get_connection(test_db_path) as conn:
+        row = conn.execute("SELECT * FROM players WHERE id = ?", (player_id,)).fetchone()
+    assert row["name"] == "Carlos Alcaraz"
+    assert row["elo"] == 2100
+    assert row["ranking"] == 2
+
+
+def test_upsert_player_updates_existing_player(test_db_path):
+    db.init_db(test_db_path)
+    first_id = db.upsert_player(test_db_path, name="Carlos Alcaraz", elo=2100, ranking=2)
+    second_id = db.upsert_player(test_db_path, name="Carlos Alcaraz", elo=2150, ranking=1)
+    assert first_id == second_id
+    with db.get_connection(test_db_path) as conn:
+        row = conn.execute("SELECT * FROM players WHERE id = ?", (second_id,)).fetchone()
+    assert row["elo"] == 2150
+    assert row["ranking"] == 1
+
+
+def test_get_player_by_name_returns_none_if_missing(test_db_path):
+    db.init_db(test_db_path)
+    assert db.get_player_by_name(test_db_path, "Nobody") is None

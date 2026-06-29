@@ -1,6 +1,7 @@
 """SQLite schema and access layer for the Wimbledon data pipeline."""
 import sqlite3
 from contextlib import contextmanager
+from datetime import datetime, timezone
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS players (
@@ -100,3 +101,29 @@ def get_connection(db_path):
 def init_db(db_path):
     with get_connection(db_path) as conn:
         conn.executescript(SCHEMA)
+
+
+def _now():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def upsert_player(db_path, name, elo=1500, ranking=None):
+    with get_connection(db_path) as conn:
+        row = conn.execute("SELECT id FROM players WHERE name = ?", (name,)).fetchone()
+        if row is None:
+            cursor = conn.execute(
+                "INSERT INTO players (name, elo, ranking, last_updated) VALUES (?, ?, ?, ?)",
+                (name, elo, ranking, _now()),
+            )
+            return cursor.lastrowid
+        conn.execute(
+            "UPDATE players SET elo = ?, ranking = ?, last_updated = ? WHERE id = ?",
+            (elo, ranking, _now(), row["id"]),
+        )
+        return row["id"]
+
+
+def get_player_by_name(db_path, name):
+    with get_connection(db_path) as conn:
+        row = conn.execute("SELECT * FROM players WHERE name = ?", (name,)).fetchone()
+        return dict(row) if row else None
