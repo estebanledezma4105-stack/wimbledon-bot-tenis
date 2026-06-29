@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS match_stats (
 @contextmanager
 def get_connection(db_path):
     conn = sqlite3.connect(db_path)
+    conn.execute("PRAGMA foreign_keys = ON")
     conn.row_factory = sqlite3.Row
     try:
         yield conn

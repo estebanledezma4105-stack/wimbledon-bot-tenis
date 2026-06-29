@@ -21,3 +21,13 @@ def test_init_db_creates_all_tables(test_db_path):
     }
     assert expected.issubset(tables)
     conn.close()
+
+
+def test_init_db_is_idempotent(test_db_path):
+    db.init_db(test_db_path)
+    db.init_db(test_db_path)
+    conn = sqlite3.connect(test_db_path)
+    cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = {row[0] for row in cursor.fetchall()}
+    assert "players" in tables
+    conn.close()
