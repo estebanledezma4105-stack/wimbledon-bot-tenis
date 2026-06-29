@@ -112,3 +112,13 @@ def test_cmd_partidos_filters_to_todays_pending_matches_only():
         {"player1": "Novak Djokovic", "player2": "Jane Qualifier",
          "winner": None, "scheduled_date": today_str},
     ]
+
+
+def test_live_status_labels_have_no_underscore():
+    """Regression test: Telegram's legacy Markdown parser treats a lone `_`
+    as an unterminated italic entity and rejects the whole message
+    (telegram.error.BadRequest: Can't parse entities). The raw status
+    'in_progress' has an underscore — cmd_live must translate it to a
+    display label before formatting, never send the raw value."""
+    for raw_status, label in wimbledon_bot._LIVE_STATUS_LABELS.items():
+        assert "_" not in label, f"{raw_status!r} maps to {label!r}, which still contains an underscore"

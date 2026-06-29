@@ -267,6 +267,9 @@ async def cmd_partidos(update: Update, context: ContextTypes.DEFAULT_TYPE):
         resp += f"{p1.title()} vs {p2.title()} ➜ {pred['favorite'].title()} ({prob:.0f}%)\n"
     await update.message.reply_text(resp, parse_mode='Markdown')
 
+_LIVE_STATUS_LABELS = {"in_progress": "en juego", "finished": "finalizado"}
+
+
 async def cmd_live(update: Update, context: ContextTypes.DEFAULT_TYPE):
     live = data_db.load_all_data(DB_PATH)['live_scores']
     if not live:
@@ -274,7 +277,9 @@ async def cmd_live(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     msg = "🔴 *En vivo:*\n"
     for match, info in live.items():
-        msg += f"{match}: {info.get('sets','?')} ({info.get('status','')})\n"
+        status = info.get('status', '')
+        status_label = _LIVE_STATUS_LABELS.get(status, status)
+        msg += f"{match}: {info.get('sets','?')} ({status_label})\n"
     await update.message.reply_text(msg, parse_mode='Markdown')
 
 # ===================== ENTRADA PRINCIPAL =====================
