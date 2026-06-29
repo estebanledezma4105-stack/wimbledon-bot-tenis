@@ -91,3 +91,19 @@ def test_get_form_points_defaults_to_zero_when_missing(test_db_path):
     db.init_db(test_db_path)
     player_id = db.upsert_player(test_db_path, name="Novak Djokovic")
     assert db.get_form_points(test_db_path, player_id) == 0
+
+
+def test_load_all_data_returns_expected_shape(test_db_path):
+    db.init_db(test_db_path)
+    p1 = db.upsert_player(test_db_path, name="Carlos Alcaraz", elo=2100)
+    p2 = db.upsert_player(test_db_path, name="Novak Djokovic", elo=2050)
+    db.set_form_points(test_db_path, p1, points=3.0)
+
+    data = db.load_all_data(test_db_path)
+
+    assert data["elo"]["Carlos Alcaraz"] == 2100
+    assert data["elo"]["Novak Djokovic"] == 2050
+    assert data["form"]["Carlos Alcaraz"] == 3.0
+    assert "Novak Djokovic" not in data["form"] or data["form"]["Novak Djokovic"] == 0
+    assert isinstance(data["grass_stats"], dict)
+    assert isinstance(data["h2h"], dict)

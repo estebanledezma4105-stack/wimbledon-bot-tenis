@@ -155,3 +155,66 @@ def get_form_points(db_path, player_id):
     with get_connection(db_path) as conn:
         row = conn.execute("SELECT points FROM form WHERE player_id = ?", (player_id,)).fetchone()
         return row["points"] if row else 0
+
+
+def load_all_data(db_path):
+    with get_connection(db_path) as conn:
+        players = conn.execute("SELECT id, name, elo FROM players").fetchall()
+        id_to_name = {p["id"]: p["name"] for p in players}
+
+        elo = {p["name"]: p["elo"] for p in players}
+
+        form = {}
+        for row in conn.execute("SELECT player_id, points FROM form").fetchall():
+            name = id_to_name.get(row["player_id"])
+            if name:
+                form[name] = row["points"]
+
+        grass_stats = {}
+        for row in conn.execute(
+            "SELECT player_id, grass_winrate, total_winrate FROM grass_stats"
+        ).fetchall():
+            name = id_to_name.get(row["player_id"])
+            if name:
+                grass_stats[name] = {
+                    "grass_winrate": row["grass_winrate"],
+                    "total_winrate": row["total_winrate"],
+                }
+
+        h2h = {}
+        for row in conn.execute("SELECT player_a_id, player_b_id, a_wins, b_wins FROM h2h").fetchall():
+            name_a = id_to_name.get(row["player_a_id"])
+            name_b = id_to_name.get(row["player_b_id"])
+            if name_a and name_b:
+                h2h[str((name_a, name_b))] = {"a_wins": row["a_wins"], "b_wins": row["b_wins"]}
+
+        draw_rows = conn.execute(
+            "SELECT round, player1_id, player2_id, winner_id FROM draw_matches"
+        ).fetchall()
+        matches = []
+        for row in draw_rows:
+            p1_name = id_to_name.get(row["player1_id"])
+            p2_name = id_to_name.get(row["player2_id"])
+            if p1_name and p2_name:
+                matches.append({"player1": p1_name, "player2": p2_name,
+                                 "winner": id_to_name.get(row["winner_id"])})
+
+        live_rows = conn.execute(
+            """SELECT dm.player1_id, dm.player2_id, ls.sets, ls.status
+               FROM live_scores ls JOIN draw_matches dm ON dm.id = ls.match_id"""
+        ).fetchall()
+        live_scores = {}
+        for row in live_rows:
+            p1_name = id_to_name.get(row["player1_id"])
+            p2_name = id_to_name.get(row["player2_id"])
+            if p1_name and p2_name:
+                live_scores[f"{p1_name} vs {p2_name}"] = {"sets": row["sets"], "status": row["status"]}
+
+        return {
+            "elo": elo,
+            "grass_stats": grass_stats,
+            "form": form,
+            "h2h": h2h,
+            "draw": {"matches": matches, "completed_matches": [m for m in matches if m["winner"]]},
+            "live_scores": live_scores,
+        }
