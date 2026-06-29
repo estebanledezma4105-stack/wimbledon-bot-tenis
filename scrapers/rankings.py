@@ -10,27 +10,53 @@ from scrapers import base
 RANKINGS_URL = "https://www.tennisexplorer.com/ranking/atp-men/"
 
 
+def _find_rankings_table(soup):
+    """tennisexplorer.com renders several <table class="result"> elements per
+    page (a date picker, betting-odds tables, "interesting matches" tables).
+    The actual rankings table is identified by its header row's first cell
+    reading "Rank" — relying on table order or row count is unreliable."""
+    for table in soup.find_all("table", class_="result"):
+        header = table.find("tr", class_="head")
+        if header is None:
+            continue
+        first_cell = header.find("td")
+        if first_cell and first_cell.get_text(strip=True).lower() == "rank":
+            return table
+    return None
+
+
+def _normalize_name(raw_name):
+    """tennisexplorer lists names as "Lastname Firstname". Swap two-token
+    names to the conventional "Firstname Lastname" order so they line up
+    with the seed alias dictionary; leave multi-word names as scraped since
+    the split point is ambiguous (e.g. multi-word surnames)."""
+    tokens = raw_name.split()
+    if len(tokens) == 2:
+        return f"{tokens[1]} {tokens[0]}"
+    return raw_name
+
+
 def parse_rankings_html(html):
     soup = BeautifulSoup(html, "html.parser")
-    table = soup.find("table", class_="result")
+    table = _find_rankings_table(soup)
     if table is None:
         return []
     results = []
     for row in table.find_all("tr"):
         if "head" in (row.get("class") or []):
             continue
-        cells = row.find_all("td")
-        if len(cells) < 2:
+        name_cell = row.find("td", class_="t-name")
+        rank_cell = row.find("td", class_="rank")
+        if name_cell is None or rank_cell is None:
             continue
         try:
-            rank = int(cells[0].get_text(strip=True))
+            rank = int(rank_cell.get_text(strip=True).rstrip("."))
         except ValueError:
             continue
-        name_link = cells[1].find("a")
-        name = name_link.get_text(strip=True) if name_link else cells[1].get_text(strip=True)
-        if not name:
+        raw_name = name_cell.get_text(strip=True)
+        if not raw_name:
             continue
-        results.append({"rank": rank, "name": name})
+        results.append({"rank": rank, "name": _normalize_name(raw_name)})
     return results
 
 

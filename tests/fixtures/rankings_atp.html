@@ -1,6 +1,41 @@
+<!-- Decoy table: tennisexplorer.com renders a date-picker table with the
+     same class="result" before the real rankings table — the parser must
+     not pick this one. -->
 <table class="result">
-  <tr class="head"><td>Rank</td><td>Player</td><td>Points</td></tr>
-  <tr><td>1</td><td><a href="/player/alcaraz/">Carlos Alcaraz</a></td><td>9255</td></tr>
-  <tr><td>2</td><td><a href="/player/sinner/">Jannik Sinner</a></td><td>8770</td></tr>
-  <tr><td>3</td><td><a href="/player/djokovic/">Novak Djokovic</a></td><td>7280</td></tr>
+  <tr class="two">
+    <td>Date:</td>
+    <td>29. 06. 2026</td>
+    <td>22. 06. 2026</td>
+  </tr>
+</table>
+
+<table class="result">
+  <tr class="head">
+    <td class="long-rank first"><a href="/ranking/atp-men/?sort=rank">Rank</a></td>
+    <td class="long-rank">Move</td>
+    <td><a href="/ranking/atp-men/?sort=name">Player name</a></td>
+    <td class="country"><a href="/ranking/atp-men/?sort=country"> Country</a></td>
+    <td class="long-point"><a href="/ranking/atp-men/?sort=point&amp;sort_ad=d">Points</a></td>
+  </tr>
+  <tr class="two" onmouseout="m_out(this);" onmouseover="m_over(this);">
+    <td class="rank first">1.</td>
+    <td class="prevrank"><div>-</div></td>
+    <td class="t-name"><a href="/player/sinner-8b8e8/">Sinner Jannik</a></td>
+    <td class="tl"><a href="/ranking/atp-men/?country=italy">Italy</a></td>
+    <td class="long-point">13450</td>
+  </tr>
+  <tr class="one" onmouseout="m_out(this);" onmouseover="m_over(this);">
+    <td class="rank first">2.</td>
+    <td class="prevrank"><div>-</div></td>
+    <td class="t-name"><a href="/player/alcaraz-5ab70/">Alcaraz Carlos</a></td>
+    <td class="tl"><a href="/ranking/atp-men/?country=spain">Spain</a></td>
+    <td class="long-point">9460</td>
+  </tr>
+  <tr class="two" onmouseout="m_out(this);" onmouseover="m_over(this);">
+    <td class="rank first">3.</td>
+    <td class="prevrank"><div>-</div></td>
+    <td class="t-name"><a href="/player/zverev-19053/">Zverev Alexander</a></td>
+    <td class="tl"><a href="/ranking/atp-men/?country=germany">Germany</a></td>
+    <td class="long-point">7190</td>
+  </tr>
 </table>
