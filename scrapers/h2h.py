@@ -28,14 +28,21 @@ SEARCH_ENDPOINT = "https://www.tennisexplorer.com/res/ajax/search.php"
 MUTUAL_URL_TEMPLATE = "https://www.tennisexplorer.com/mutual/{slug1}/{slug2}/"
 
 
-def search_player_slug(session, name):
+def search_player_slug(session, name, sex="man"):
     """Returns the tennisexplorer URL slug for a player name, or None if no
-    (or more than one ambiguous) result. Searching with a full
-    "Firstname Lastname" query disambiguates same-surname players."""
+    (or still-ambiguous) result. Searching with a full "Firstname Lastname"
+    query disambiguates same-surname players (e.g. the Zverev siblings).
+    `sex` filters cross-gender surname collisions (e.g. a man and woman both
+    surnamed "Hurkacz") before falling back to treating multiple remaining
+    results as ambiguous — pass sex=None to skip this filter."""
     response = session.get(SEARCH_ENDPOINT, params={"s": name, "t": "p", "c": ""}, timeout=10)
     response.raise_for_status()
     payload = response.json()
     links = payload.get("links", [])
+    if sex is not None and len(links) > 1:
+        sex_filtered = [link for link in links if link.get("sex") == sex]
+        if len(sex_filtered) == 1:
+            return sex_filtered[0]["url"]
     return links[0]["url"] if len(links) == 1 else None
 
 

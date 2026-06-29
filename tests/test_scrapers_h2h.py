@@ -39,6 +39,22 @@ def test_search_player_slug_returns_url_for_unambiguous_match():
     assert slug == "alcaraz-5ab70"
 
 
+def test_search_player_slug_resolves_cross_gender_surname_collision():
+    mock_response = MagicMock()
+    mock_response.json.return_value = {
+        "links": [
+            {"type": "p", "sex": "man", "url": "hurkacz", "name": "Hurkacz, Hubert (POL)"},
+            {"type": "p", "sex": "woman", "url": "hurkacz-ac885", "name": "Hurkacz, Nika (POL)"},
+        ]
+    }
+    mock_response.raise_for_status = MagicMock()
+    mock_session = MagicMock()
+    mock_session.get.return_value = mock_response
+
+    slug = h2h.search_player_slug(mock_session, "Hurkacz")
+    assert slug == "hurkacz"
+
+
 def test_search_player_slug_returns_none_when_ambiguous():
     mock_response = MagicMock()
     mock_response.json.return_value = {
