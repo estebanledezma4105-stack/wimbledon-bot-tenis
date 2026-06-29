@@ -10,10 +10,34 @@ import logging
 
 import db as data_db
 
+
+def _load_dotenv(path=".env"):
+    """Minimal .env loader (no external dependency): sets os.environ from
+    KEY=VALUE lines, skipping blanks/comments, without overwriting variables
+    already set in the real environment."""
+    if not os.path.exists(path):
+        return
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+
+
+_load_dotenv()
+
 DB_PATH = os.path.join("data", "wimbledon.db")
 
 # ===================== CONFIGURACIÓN =====================
-TELEGRAM_TOKEN = "TU_TOKEN_AQUI"  # Reemplaza con tu token de @BotFather
+# El token nunca se hardcodea: se lee de la variable de entorno TELEGRAM_TOKEN
+# (definida en .env, que está en .gitignore). Evita que el secreto termine en git.
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # Pesos del modelo (calibrables con backtesting)
 K_ELO = 32          # Factor K para Grand Slam
@@ -134,7 +158,8 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🎾 *Bot Wimbledon 2026*\n\n"
         "/predict `JugadorA vs JugadorB`\n"
-        "/draw - Partidos del día\n"
+        "/partidos - Predicciones de los partidos pendientes\n"
+        "/draw - Todos los partidos del cuadro\n"
         "/live - Resultados en vivo\n"
         "/stats `Jugador` - Estadísticas completas",
         parse_mode='Markdown'
@@ -219,6 +244,26 @@ async def cmd_draw(update: Update, context: ContextTypes.DEFAULT_TYPE):
         resp += f"{p1.title()} vs {p2.title()} ➜ {pred['favorite'].title()} ({prob:.0f}%)\n"
     await update.message.reply_text(resp, parse_mode='Markdown')
 
+async def cmd_partidos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Predicciones de los partidos aún sin resultado.
+
+    El esquema actual no guarda la fecha programada de cada partido (solo
+    ronda y si ya se completó), así que "partidos del día" se aproxima como
+    "partidos pendientes" hasta que se agregue una columna de fecha al draw."""
+    data = data_db.load_all_data(DB_PATH)
+    matches = data['draw'].get('matches', [])
+    pending = [m for m in matches if not m['winner']]
+    if not pending:
+        await update.message.reply_text("No hay partidos pendientes por ahora.")
+        return
+    resp = "🎾 *Predicciones de partidos pendientes:*\n\n"
+    for m in pending:
+        p1, p2 = m['player1'], m['player2']
+        pred = predict_match(p1, p2, data)
+        prob = max(pred['prob_a'], pred['prob_b']) * 100
+        resp += f"{p1.title()} vs {p2.title()} ➜ {pred['favorite'].title()} ({prob:.0f}%)\n"
+    await update.message.reply_text(resp, parse_mode='Markdown')
+
 async def cmd_live(update: Update, context: ContextTypes.DEFAULT_TYPE):
     live = data_db.load_all_data(DB_PATH)['live_scores']
     if not live:
@@ -231,9 +276,15 @@ async def cmd_live(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ===================== ENTRADA PRINCIPAL =====================
 def run_bot():
+    if not TELEGRAM_TOKEN:
+        raise RuntimeError(
+            "TELEGRAM_TOKEN no está configurado. Define la variable de entorno "
+            "TELEGRAM_TOKEN con el token de @BotFather antes de ejecutar el bot."
+        )
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("predict", cmd_predict))
+    app.add_handler(CommandHandler("partidos", cmd_partidos))
     app.add_handler(CommandHandler("stats", cmd_stats))
     app.add_handler(CommandHandler("draw", cmd_draw))
     app.add_handler(CommandHandler("live", cmd_live))

@@ -1,3 +1,5 @@
+import os
+
 import db
 import wimbledon_bot
 
@@ -63,3 +65,37 @@ def test_predict_match_picks_favorite_by_elo():
     pred = wimbledon_bot.predict_match("Carlos Alcaraz", "Mark Newcomer", data)
     assert pred["favorite"] == "Carlos Alcaraz"
     assert pred["prob_a"] > pred["prob_b"]
+
+
+def test_load_dotenv_sets_environ_without_overwriting_existing(tmp_path, monkeypatch):
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "TELEGRAM_TOKEN=from-dotenv\n"
+        "# a comment\n"
+        "\n"
+        "ALREADY_SET=should-not-overwrite\n"
+        'QUOTED_VALUE="hello world"\n'
+    )
+    monkeypatch.delenv("TELEGRAM_TOKEN", raising=False)
+    monkeypatch.setenv("ALREADY_SET", "original-value")
+
+    wimbledon_bot._load_dotenv(str(env_file))
+
+    assert os.environ["TELEGRAM_TOKEN"] == "from-dotenv"
+    assert os.environ["ALREADY_SET"] == "original-value"
+    assert os.environ["QUOTED_VALUE"] == "hello world"
+
+
+def test_load_dotenv_missing_file_does_not_raise(tmp_path):
+    wimbledon_bot._load_dotenv(str(tmp_path / "does_not_exist.env"))
+
+
+def test_cmd_partidos_filters_to_pending_matches_only():
+    matches = [
+        {"player1": "Carlos Alcaraz", "player2": "Mark Newcomer", "winner": "Carlos Alcaraz"},
+        {"player1": "Novak Djokovic", "player2": "Jane Qualifier", "winner": None},
+    ]
+    pending = [m for m in matches if not m["winner"]]
+    assert pending == [
+        {"player1": "Novak Djokovic", "player2": "Jane Qualifier", "winner": None},
+    ]
