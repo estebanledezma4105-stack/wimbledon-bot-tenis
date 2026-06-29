@@ -45,6 +45,48 @@ def parse_uts_json(payload):
     return results
 
 
+def run_form(db_path, row_count=500, session=None):
+    """Feeds the `form` table from UTS's RECENT_ELO_RANK (Elo weighted
+    towards recent matches, i.e. who's playing well *right now* vs their
+    long-run rating). Stored as the delta (recent_elo - current stored elo):
+    positive means trending up, negative means trending down. Only updates
+    players already known in `players` — this endpoint doesn't carry enough
+    identity signal on its own to safely create new player rows."""
+    started_at = datetime.now(timezone.utc).isoformat()
+    session = session or base.get_session()
+
+    def _fetch():
+        response = session.get(
+            UTS_ENDPOINT, params={"rankType": "RECENT_ELO_RANK", "rowCount": row_count}, timeout=10
+        )
+        response.raise_for_status()
+        return response.json()
+
+    try:
+        payload = base.fetch_with_retry(_fetch)
+        parsed = parse_uts_json(payload)
+        rows_written = 0
+        for entry in parsed:
+            canonical = (
+                name_resolver.resolve(db_path, entry["name"], source="ultimatetennisstatistics")
+                or _resolve_by_token_subset(db_path, entry["name"])
+            )
+            if canonical is None:
+                continue
+            player = db.get_player_by_name(db_path, canonical)
+            if player is None:
+                continue
+            delta = entry["elo"] - player["elo"]
+            db.set_form_points(db_path, player["id"], points=delta)
+            rows_written += 1
+            base.jittered_sleep(0.1, 0.3)
+        base.log_scraper_run(db_path, "elo_uts_form", "success", rows_fetched=rows_written, started_at=started_at)
+        return rows_written
+    except Exception as exc:
+        base.log_scraper_run(db_path, "elo_uts_form", "failure", rows_fetched=0, error_message=str(exc), started_at=started_at)
+        raise
+
+
 def run(db_path, rank_type="GRASS_ELO_RANK", row_count=100, session=None):
     started_at = datetime.now(timezone.utc).isoformat()
     session = session or base.get_session()

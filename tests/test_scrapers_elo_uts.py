@@ -82,3 +82,36 @@ def test_run_logs_failure_and_reraises_on_fetch_error(tmp_path):
         run_log = conn.execute("SELECT * FROM scraper_runs WHERE source = 'elo_uts'").fetchone()
     assert run_log["status"] == "failure"
     assert run_log["rows_fetched"] == 0
+
+
+def test_run_form_stores_delta_between_recent_and_current_elo(tmp_path):
+    db_path = str(tmp_path / "test.db")
+    db.init_db(db_path)
+    player_id = db.upsert_player(db_path, name="Jannik Sinner", elo=2162)
+
+    payload = {"rows": [{"rank": 1, "name": "Jannik Sinner", "points": 2570}]}
+    mock_response = MagicMock()
+    mock_response.json.return_value = payload
+    mock_response.raise_for_status = MagicMock()
+    mock_session = MagicMock()
+    mock_session.get.return_value = mock_response
+
+    rows = elo_uts.run_form(db_path, session=mock_session)
+    assert rows == 1
+    assert db.get_form_points(db_path, player_id) == 2570 - 2162
+
+
+def test_run_form_skips_unknown_players_without_creating_them(tmp_path):
+    db_path = str(tmp_path / "test.db")
+    db.init_db(db_path)
+
+    payload = {"rows": [{"rank": 1, "name": "Totally Unknown Player", "points": 2000}]}
+    mock_response = MagicMock()
+    mock_response.json.return_value = payload
+    mock_response.raise_for_status = MagicMock()
+    mock_session = MagicMock()
+    mock_session.get.return_value = mock_response
+
+    rows = elo_uts.run_form(db_path, session=mock_session)
+    assert rows == 0
+    assert db.get_player_by_name(db_path, "Totally Unknown Player") is None
