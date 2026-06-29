@@ -162,6 +162,7 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/partidos - Predicciones de los partidos pendientes\n"
         "/draw - Todos los partidos del cuadro\n"
         "/live - Resultados en vivo\n"
+        "/acierto - Historial de aciertos del modelo\n"
         "/stats `Jugador` - Estadísticas completas",
         parse_mode='Markdown'
     )
@@ -282,6 +283,22 @@ async def cmd_live(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg += f"{match}: {info.get('sets','?')} ({status_label})\n"
     await update.message.reply_text(msg, parse_mode='Markdown')
 
+
+async def cmd_acierto(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    import predictions
+    correct, total, details = predictions.compute_accuracy(DB_PATH)
+    if total == 0:
+        await update.message.reply_text("Todavía no hay predicciones con resultado para evaluar.")
+        return
+    pct = 100 * correct / total
+    msg = f"📊 *Acierto: {correct}/{total} ({pct:.0f}%)*\n\n"
+    for d in details[:15]:
+        mark = "✅" if d["correct"] else "❌"
+        msg += (f"{mark} {d['player1'].title()} vs {d['player2'].title()} "
+                f"→ predijo {d['predicted'].title()} ({d['probability']*100:.0f}%), "
+                f"ganó {d['winner'].title()}\n")
+    await update.message.reply_text(msg, parse_mode='Markdown')
+
 # ===================== ENTRADA PRINCIPAL =====================
 def run_bot():
     if not TELEGRAM_TOKEN:
@@ -296,6 +313,7 @@ def run_bot():
     app.add_handler(CommandHandler("stats", cmd_stats))
     app.add_handler(CommandHandler("draw", cmd_draw))
     app.add_handler(CommandHandler("live", cmd_live))
+    app.add_handler(CommandHandler("acierto", cmd_acierto))
     logger.info("Bot iniciado. Pulsa Ctrl+C para detener.")
     app.run_polling()
 

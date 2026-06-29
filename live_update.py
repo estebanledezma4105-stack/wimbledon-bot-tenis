@@ -11,6 +11,7 @@ import logging
 import sys
 
 import db
+import predictions
 from scrapers import live
 
 DB_PATH = "data/wimbledon.db"
@@ -32,6 +33,16 @@ def main():
     except Exception as exc:
         logger.error("FAILED live: %s", exc)
         print(f"[FALLO] live: {exc}")
+        return
+
+    try:
+        won = predictions.backfill_winners_from_live(DB_PATH)
+        logged = predictions.log_pending_predictions(DB_PATH)
+        logger.info("OK predictions: %d winners backfilled, %d new predictions logged", won, logged)
+        print(f"[OK] predictions: {won} ganadores, {logged} predicciones nuevas")
+    except Exception as exc:
+        logger.error("FAILED predictions: %s", exc)
+        print(f"[FALLO] predictions: {exc}")
 
 
 if __name__ == "__main__":

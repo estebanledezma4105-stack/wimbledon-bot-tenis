@@ -65,6 +65,13 @@ CREATE TABLE IF NOT EXISTS live_scores (
     updated_at TEXT
 );
 
+CREATE TABLE IF NOT EXISTS predictions (
+    match_id INTEGER PRIMARY KEY REFERENCES draw_matches(id),
+    favorite_id INTEGER NOT NULL REFERENCES players(id),
+    probability REAL NOT NULL,
+    created_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS scraper_runs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     source TEXT NOT NULL,
@@ -195,14 +202,14 @@ def load_all_data(db_path):
                 h2h[str((name_a, name_b))] = {"a_wins": row["a_wins"], "b_wins": row["b_wins"]}
 
         draw_rows = conn.execute(
-            "SELECT round, player1_id, player2_id, winner_id, scheduled_date FROM draw_matches"
+            "SELECT id, round, player1_id, player2_id, winner_id, scheduled_date FROM draw_matches"
         ).fetchall()
         matches = []
         for row in draw_rows:
             p1_name = id_to_name.get(row["player1_id"])
             p2_name = id_to_name.get(row["player2_id"])
             if p1_name and p2_name:
-                matches.append({"player1": p1_name, "player2": p2_name,
+                matches.append({"id": row["id"], "player1": p1_name, "player2": p2_name,
                                  "winner": id_to_name.get(row["winner_id"]),
                                  "scheduled_date": row["scheduled_date"]})
 
@@ -225,3 +232,61 @@ def load_all_data(db_path):
             "draw": {"matches": matches, "completed_matches": [m for m in matches if m["winner"]]},
             "live_scores": live_scores,
         }
+
+
+def record_prediction(db_path, match_id, favorite_id, probability):
+    """Locks in a prediction the first time it's seen for a match — never
+    overwrites an existing one, so accuracy tracking reflects what was
+    predicted before the result was known, not a prediction recomputed with
+    hindsight from updated elo/h2h data."""
+    with get_connection(db_path) as conn:
+        conn.execute(
+            """INSERT INTO predictions (match_id, favorite_id, probability, created_at)
+               VALUES (?, ?, ?, ?)
+               ON CONFLICT(match_id) DO NOTHING""",
+            (match_id, favorite_id, probability, _now()),
+        )
+
+
+def set_match_winner(db_path, match_id, winner_id):
+    with get_connection(db_path) as conn:
+        conn.execute(
+            "UPDATE draw_matches SET winner_id = ? WHERE id = ? AND winner_id IS NULL",
+            (winner_id, match_id),
+        )
+
+
+def get_accuracy_stats(db_path):
+    """Compares each locked-in prediction against the actual winner, for
+    matches that have concluded. Returns (correct, total, details) where
+    details is a list of {match_id, player1, player2, predicted, probability,
+    winner, correct} dicts, ordered by most recently decided first."""
+    with get_connection(db_path) as conn:
+        rows = conn.execute(
+            """SELECT p.match_id, p.probability, fav.name AS predicted,
+                      p1.name AS player1, p2.name AS player2, w.name AS winner
+               FROM predictions p
+               JOIN draw_matches dm ON dm.id = p.match_id
+               JOIN players fav ON fav.id = p.favorite_id
+               JOIN players p1 ON p1.id = dm.player1_id
+               JOIN players p2 ON p2.id = dm.player2_id
+               JOIN players w ON w.id = dm.winner_id
+               WHERE dm.winner_id IS NOT NULL
+               ORDER BY p.match_id DESC"""
+        ).fetchall()
+
+    details = []
+    correct = 0
+    for row in rows:
+        hit = row["predicted"] == row["winner"]
+        correct += hit
+        details.append({
+            "match_id": row["match_id"],
+            "player1": row["player1"],
+            "player2": row["player2"],
+            "predicted": row["predicted"],
+            "probability": row["probability"],
+            "winner": row["winner"],
+            "correct": hit,
+        })
+    return correct, len(rows), details
