@@ -108,19 +108,17 @@ def _now():
 
 
 def upsert_player(db_path, name, elo=1500, ranking=None):
+    """Full overwrite on conflict: existing elo/ranking are replaced, not merged."""
     with get_connection(db_path) as conn:
-        row = conn.execute("SELECT id FROM players WHERE name = ?", (name,)).fetchone()
-        if row is None:
-            cursor = conn.execute(
-                "INSERT INTO players (name, elo, ranking, last_updated) VALUES (?, ?, ?, ?)",
-                (name, elo, ranking, _now()),
-            )
-            return cursor.lastrowid
-        conn.execute(
-            "UPDATE players SET elo = ?, ranking = ?, last_updated = ? WHERE id = ?",
-            (elo, ranking, _now(), row["id"]),
+        cursor = conn.execute(
+            """INSERT INTO players (name, elo, ranking, last_updated) VALUES (?, ?, ?, ?)
+               ON CONFLICT(name) DO UPDATE SET elo = excluded.elo,
+                                                ranking = excluded.ranking,
+                                                last_updated = excluded.last_updated
+               RETURNING id""",
+            (name, elo, ranking, _now()),
         )
-        return row["id"]
+        return cursor.fetchone()["id"]
 
 
 def get_player_by_name(db_path, name):
