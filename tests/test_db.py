@@ -200,3 +200,82 @@ def test_init_db_creates_atp_rankings_table(test_db_path):
     assert "updated_at" in columns, "updated_at column not found"
 
     conn.close()
+
+
+def test_upsert_ranking_inserts_and_updates(test_db_path):
+    """Test that upsert_ranking inserts new rankings and updates existing ones."""
+    db.init_db(test_db_path)
+    # Create player
+    player_id = db.upsert_player(test_db_path, name="Carlos Alcaraz", elo=2100)
+
+    # Insert ranking data
+    db.upsert_ranking(test_db_path, player_id, ranking_position=1, ranking_points=10000)
+
+    # Verify inserted data
+    with db.get_connection(test_db_path) as conn:
+        row = conn.execute("SELECT * FROM atp_rankings WHERE player_id = ?", (player_id,)).fetchone()
+    assert row is not None
+    assert row["ranking_position"] == 1
+    assert row["ranking_points"] == 10000
+    assert row["scraped_at"] is not None
+
+    # Update with new values
+    db.upsert_ranking(test_db_path, player_id, ranking_position=2, ranking_points=9500)
+
+    # Verify update (no duplicate, values changed)
+    with db.get_connection(test_db_path) as conn:
+        rows = conn.execute("SELECT * FROM atp_rankings WHERE player_id = ?", (player_id,)).fetchall()
+    assert len(rows) == 1, "upsert should not create duplicate rows"
+    assert rows[0]["ranking_position"] == 2
+    assert rows[0]["ranking_points"] == 9500
+
+
+def test_upsert_recent_form_inserts_and_updates(test_db_path):
+    """Test that upsert_recent_form inserts new form data and updates existing ones."""
+    db.init_db(test_db_path)
+    # Create player
+    player_id = db.upsert_player(test_db_path, name="Novak Djokovic", elo=2050)
+
+    # Insert form data
+    db.upsert_recent_form(
+        test_db_path, player_id,
+        tournaments_played=5,
+        wins=15,
+        losses=3,
+        titles=1,
+        finals_reached=2,
+        last_tournament_date="2026-06-15"
+    )
+
+    # Verify inserted data
+    with db.get_connection(test_db_path) as conn:
+        row = conn.execute("SELECT * FROM recent_form WHERE player_id = ?", (player_id,)).fetchone()
+    assert row is not None
+    assert row["tournaments_played"] == 5
+    assert row["wins"] == 15
+    assert row["losses"] == 3
+    assert row["titles"] == 1
+    assert row["finals_reached"] == 2
+    assert row["last_tournament_date"] == "2026-06-15"
+    assert row["updated_at"] is not None
+
+    # Update with new values
+    db.upsert_recent_form(
+        test_db_path, player_id,
+        tournaments_played=6,
+        wins=18,
+        losses=3,
+        titles=2,
+        finals_reached=3,
+        last_tournament_date="2026-06-28"
+    )
+
+    # Verify update (no duplicate, values changed)
+    with db.get_connection(test_db_path) as conn:
+        rows = conn.execute("SELECT * FROM recent_form WHERE player_id = ?", (player_id,)).fetchall()
+    assert len(rows) == 1, "upsert should not create duplicate rows"
+    assert rows[0]["tournaments_played"] == 6
+    assert rows[0]["wins"] == 18
+    assert rows[0]["titles"] == 2
+    assert rows[0]["finals_reached"] == 3
+    assert rows[0]["last_tournament_date"] == "2026-06-28"
