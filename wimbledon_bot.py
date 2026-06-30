@@ -48,6 +48,8 @@ W_H2H = 25          # Peso del historial H2H
 DAYS_FORM = 30      # Ventana de forma reciente
 W_FATIGUE = 0.15    # Peso de la penalización por fatiga (partidos largos recientes)
 FATIGUE_BASELINE_GAMES = 24  # juegos "normales" en una victoria 2-0 sin sets largos
+W_RANKING = 0.15    # Peso del bonus por ranking ATP
+W_RECENT_FORM = 0.10  # Peso del bonus de forma reciente
 
 # ===================== MODELO PREDICTIVO =====================
 def win_probability(rating_a, rating_b):
@@ -93,6 +95,33 @@ def get_fatigue_bonus(player_id, fatigue_data):
     estimado) como proxy de desgaste físico."""
     games = fatigue_data.get(player_id, 0)
     return -W_FATIGUE * max(0, games - FATIGUE_BASELINE_GAMES)
+
+def get_ranking_bonus(player_id, ranking_dict):
+    """R(X) = w_ranking * (2000 - ranking_position) / 1000
+
+    Otorga bonus a jugadores mejor rankeados en ATP. El 2000 es un valor
+    neutral para jugadores no rankeados (bonus ~0). Top 10 reciben bonus
+    positivo significativo."""
+    ranking_position = ranking_dict.get(player_id, 2000)
+    return W_RANKING * (2000 - ranking_position) / 1000
+
+def get_recent_form_bonus(player_id, recent_form_dict):
+    """B(X) = w_recent_form * (recent_win_pct - 0.5) * 100
+
+    Calcula el bonus de forma reciente. Si el jugador no tiene torneos
+    registrados, retorna 0. Para jugadores con historial, calcula el
+    porcentaje de victorias en los últimos torneos."""
+    form_data = recent_form_dict.get(player_id)
+    if form_data is None:
+        return 0.0
+    wins = form_data.get('wins', 0)
+    losses = form_data.get('losses', 0)
+    total = wins + losses
+    if total == 0:
+        recent_win_pct = 0.5
+    else:
+        recent_win_pct = wins / total
+    return W_RECENT_FORM * (recent_win_pct - 0.5) * 100
 
 def calculate_rating(player_id, opponent_id, elo_dict, grass_stats, form_data, h2h_data, fatigue_data=None):
     elo = elo_dict.get(player_id, 1500)

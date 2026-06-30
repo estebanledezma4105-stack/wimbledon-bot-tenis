@@ -147,3 +147,55 @@ def test_predict_match_favors_fresher_player_when_elo_is_equal():
     }
     pred = wimbledon_bot.predict_match("Tired Player", "Fresh Player", data)
     assert pred["favorite"] == "Fresh Player"
+
+
+def test_get_ranking_bonus_top10():
+    """Top 10 ranked players should receive a positive ranking bonus."""
+    ranking_dict = {"Carlos Alcaraz": 1, "Novak Djokovic": 2, "Jannik Sinner": 3}
+
+    bonus_alcaraz = wimbledon_bot.get_ranking_bonus("Carlos Alcaraz", ranking_dict)
+    bonus_djokovic = wimbledon_bot.get_ranking_bonus("Novak Djokovic", ranking_dict)
+    bonus_sinner = wimbledon_bot.get_ranking_bonus("Jannik Sinner", ranking_dict)
+
+    assert bonus_alcaraz > 0
+    assert bonus_djokovic > 0
+    assert bonus_sinner > 0
+    assert bonus_alcaraz > bonus_djokovic > bonus_sinner
+
+
+def test_get_ranking_bonus_unknown():
+    """Unranked players (ranking 2000) should have ~0 bonus."""
+    ranking_dict = {"Carlos Alcaraz": 1, "Unknown Player": 2000}
+
+    bonus_unknown = wimbledon_bot.get_ranking_bonus("Unknown Player", ranking_dict)
+    bonus_not_in_dict = wimbledon_bot.get_ranking_bonus("Not In Dict", ranking_dict)
+
+    assert abs(bonus_unknown) < 0.001
+    assert abs(bonus_not_in_dict) < 0.001
+
+
+def test_get_recent_form_bonus_strong():
+    """Strong recent form (60% win rate) should provide a positive bonus."""
+    recent_form_dict = {"Strong Player": {"wins": 6, "losses": 4}}
+
+    bonus = wimbledon_bot.get_recent_form_bonus("Strong Player", recent_form_dict)
+
+    assert bonus > 0
+
+
+def test_get_recent_form_bonus_poor():
+    """Poor recent form (40% win rate) should provide a negative bonus."""
+    recent_form_dict = {"Poor Player": {"wins": 4, "losses": 6}}
+
+    bonus = wimbledon_bot.get_recent_form_bonus("Poor Player", recent_form_dict)
+
+    assert bonus < 0
+
+
+def test_get_recent_form_bonus_no_tournaments():
+    """Players with no tournament data should have 0 bonus (neutral form)."""
+    recent_form_dict = {}
+
+    bonus = wimbledon_bot.get_recent_form_bonus("No History Player", recent_form_dict)
+
+    assert abs(bonus) < 0.001
