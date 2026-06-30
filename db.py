@@ -340,3 +340,33 @@ def get_accuracy_stats(db_path):
             "correct": hit,
         })
     return correct, len(rows), details
+
+
+def upsert_ranking(db_path, player_id, ranking_position, ranking_points):
+    """Insert or update ATP ranking for a player."""
+    with get_connection(db_path) as conn:
+        conn.execute(
+            """INSERT INTO atp_rankings (player_id, ranking_position, ranking_points, scraped_at)
+               VALUES (?, ?, ?, ?)
+               ON CONFLICT(player_id) DO UPDATE SET ranking_position = excluded.ranking_position,
+                                                    ranking_points = excluded.ranking_points,
+                                                    scraped_at = excluded.scraped_at""",
+            (player_id, ranking_position, ranking_points, _now()),
+        )
+
+
+def upsert_recent_form(db_path, player_id, tournaments_played, wins, losses, titles, finals_reached, last_tournament_date):
+    """Insert or update recent form for a player."""
+    with get_connection(db_path) as conn:
+        conn.execute(
+            """INSERT INTO recent_form (player_id, tournaments_played, wins, losses, titles, finals_reached, last_tournament_date, updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+               ON CONFLICT(player_id) DO UPDATE SET tournaments_played = excluded.tournaments_played,
+                                                    wins = excluded.wins,
+                                                    losses = excluded.losses,
+                                                    titles = excluded.titles,
+                                                    finals_reached = excluded.finals_reached,
+                                                    last_tournament_date = excluded.last_tournament_date,
+                                                    updated_at = excluded.updated_at""",
+            (player_id, tournaments_played, wins, losses, titles, finals_reached, last_tournament_date, _now()),
+        )
