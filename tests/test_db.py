@@ -164,3 +164,39 @@ def test_load_all_data_includes_fatigue_per_player(test_db_path):
     player_id = db.upsert_player(test_db_path, name="Carlos Alcaraz")
     data = db.load_all_data(test_db_path)
     assert data["fatigue"]["Carlos Alcaraz"] == 0
+
+
+def test_init_db_creates_atp_rankings_table(test_db_path):
+    db.init_db(test_db_path)
+    conn = sqlite3.connect(test_db_path)
+    cursor = conn.cursor()
+
+    # Verify atp_rankings table exists
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='atp_rankings'")
+    assert cursor.fetchone() is not None, "atp_rankings table not found"
+
+    # Verify column structure for atp_rankings
+    cursor.execute("PRAGMA table_info(atp_rankings)")
+    columns = {row[1]: row[2] for row in cursor.fetchall()}
+    assert "player_id" in columns, "player_id column not found"
+    assert "ranking_position" in columns, "ranking_position column not found"
+    assert "ranking_points" in columns, "ranking_points column not found"
+    assert "scraped_at" in columns, "scraped_at column not found"
+
+    # Verify recent_form table exists
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='recent_form'")
+    assert cursor.fetchone() is not None, "recent_form table not found"
+
+    # Verify column structure for recent_form
+    cursor.execute("PRAGMA table_info(recent_form)")
+    columns = {row[1]: row[2] for row in cursor.fetchall()}
+    assert "player_id" in columns, "player_id column not found"
+    assert "tournaments_played" in columns, "tournaments_played column not found"
+    assert "wins" in columns, "wins column not found"
+    assert "losses" in columns, "losses column not found"
+    assert "titles" in columns, "titles column not found"
+    assert "finals_reached" in columns, "finals_reached column not found"
+    assert "last_tournament_date" in columns, "last_tournament_date column not found"
+    assert "updated_at" in columns, "updated_at column not found"
+
+    conn.close()

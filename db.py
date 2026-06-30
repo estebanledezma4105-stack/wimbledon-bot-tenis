@@ -91,6 +91,24 @@ CREATE TABLE IF NOT EXISTS match_stats (
     double_faults INTEGER,
     PRIMARY KEY (match_id, player_id)
 );
+
+CREATE TABLE IF NOT EXISTS atp_rankings (
+    player_id INTEGER PRIMARY KEY REFERENCES players(id),
+    ranking_position INTEGER,
+    ranking_points REAL,
+    scraped_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS recent_form (
+    player_id INTEGER PRIMARY KEY REFERENCES players(id),
+    tournaments_played INTEGER,
+    wins INTEGER,
+    losses INTEGER,
+    titles INTEGER,
+    finals_reached INTEGER,
+    last_tournament_date TEXT,
+    updated_at TEXT
+);
 """
 
 
