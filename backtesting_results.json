@@ -1,0 +1,134 @@
+{
+  "best_accuracy": 0.7037037037037037,
+  "best_weights": {
+    "K_ELO": 20,
+    "W_GRASS": 0.8,
+    "W_FORM": 0.3,
+    "W_H2H": 15,
+    "W_FATIGUE": 0.05,
+    "W_RANKING": 0.0,
+    "W_RECENT_FORM": 0.0
+  },
+  "top_10": [
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.0,
+        "W_RECENT_FORM": 0.0
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.0,
+        "W_RECENT_FORM": 0.05
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.0,
+        "W_RECENT_FORM": 0.1
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.0,
+        "W_RECENT_FORM": 0.15
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.0,
+        "W_RECENT_FORM": 0.2
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.05,
+        "W_RECENT_FORM": 0.0
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.05,
+        "W_RECENT_FORM": 0.05
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.05,
+        "W_RECENT_FORM": 0.1
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.05,
+        "W_RECENT_FORM": 0.15
+      }
+    },
+    {
+      "accuracy": 0.7037037037037037,
+      "weights": {
+        "K_ELO": 20,
+        "W_GRASS": 0.8,
+        "W_FORM": 0.3,
+        "W_H2H": 15,
+        "W_FATIGUE": 0.05,
+        "W_RANKING": 0.05,
+        "W_RECENT_FORM": 0.2
+      }
+    }
+  ]
+}

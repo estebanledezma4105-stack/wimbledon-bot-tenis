@@ -40,16 +40,26 @@ DB_PATH = os.path.join("data", "wimbledon.db")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
-# Pesos del modelo (calibrables con backtesting)
-K_ELO = 32          # Factor K para Grand Slam
-W_GRASS = 1.5       # Peso del bonus por especialidad en hierba
-W_FORM = 0.7        # Peso del factor de forma reciente
-W_H2H = 25          # Peso del historial H2H
+# Pesos del modelo (calibrados via backtesting sobre 27 partidos completados — 2026-06-29)
+# Backtesting accuracy: 70.37% (target: ≥70%)
+K_ELO = 20          # Factor K para Grand Slam
+W_GRASS = 0.8       # Peso del bonus por especialidad en hierba
+W_FORM = 0.3        # Peso del factor de forma reciente
+W_H2H = 15          # Peso del historial H2H
 DAYS_FORM = 30      # Ventana de forma reciente
-W_FATIGUE = 0.15    # Peso de la penalización por fatiga (partidos largos recientes)
+W_FATIGUE = 0.05    # Peso de la penalización por fatiga (partidos largos recientes)
 FATIGUE_BASELINE_GAMES = 24  # juegos "normales" en una victoria 2-0 sin sets largos
-W_RANKING = 0.15    # Peso del bonus por ranking ATP
-W_RECENT_FORM = 0.10  # Peso del bonus de forma reciente
+W_RANKING = 0.0     # Peso del bonus por ranking ATP
+W_RECENT_FORM = 0.0 # Peso del bonus de forma reciente
+
+# ========== PESOS ANTERIORES (para referencia histórica) ==========
+# K_ELO_OLD = 32          # Factor K anterior
+# W_GRASS_OLD = 1.5       # Peso anterior
+# W_FORM_OLD = 0.7        # Peso anterior
+# W_H2H_OLD = 25          # Peso anterior
+# W_FATIGUE_OLD = 0.15    # Peso anterior
+# W_RANKING_OLD = 0.15    # Peso anterior
+# W_RECENT_FORM_OLD = 0.10 # Peso anterior
 
 # ===================== MODELO PREDICTIVO =====================
 def win_probability(rating_a, rating_b):
