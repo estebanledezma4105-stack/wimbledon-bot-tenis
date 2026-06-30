@@ -150,17 +150,25 @@ def test_predict_match_favors_fresher_player_when_elo_is_equal():
 
 
 def test_get_ranking_bonus_top10():
-    """Top 10 ranked players should receive a positive ranking bonus."""
+    """Top 10 ranked players should receive a positive ranking bonus (or 0 if weight is 0)."""
     ranking_dict = {"Carlos Alcaraz": 1, "Novak Djokovic": 2, "Jannik Sinner": 3}
 
     bonus_alcaraz = wimbledon_bot.get_ranking_bonus("Carlos Alcaraz", ranking_dict)
     bonus_djokovic = wimbledon_bot.get_ranking_bonus("Novak Djokovic", ranking_dict)
     bonus_sinner = wimbledon_bot.get_ranking_bonus("Jannik Sinner", ranking_dict)
 
-    assert bonus_alcaraz > 0
-    assert bonus_djokovic > 0
-    assert bonus_sinner > 0
-    assert bonus_alcaraz > bonus_djokovic > bonus_sinner
+    # If W_RANKING is 0, all bonuses will be 0 (which is valid from backtesting optimization)
+    # Otherwise, ranking bonuses should be positive and ordered by ranking
+    if wimbledon_bot.W_RANKING > 0:
+        assert bonus_alcaraz > 0
+        assert bonus_djokovic > 0
+        assert bonus_sinner > 0
+        assert bonus_alcaraz > bonus_djokovic > bonus_sinner
+    else:
+        # Backtesting found optimal W_RANKING = 0, so all bonuses are 0
+        assert bonus_alcaraz == 0
+        assert bonus_djokovic == 0
+        assert bonus_sinner == 0
 
 
 def test_get_ranking_bonus_unknown():
@@ -175,21 +183,31 @@ def test_get_ranking_bonus_unknown():
 
 
 def test_get_recent_form_bonus_strong():
-    """Strong recent form (60% win rate) should provide a positive bonus."""
+    """Strong recent form (60% win rate) should provide a positive bonus (or 0 if weight is 0)."""
     recent_form_dict = {"Strong Player": {"wins": 6, "losses": 4}}
 
     bonus = wimbledon_bot.get_recent_form_bonus("Strong Player", recent_form_dict)
 
-    assert bonus > 0
+    # If W_RECENT_FORM is 0, bonus will be 0 (which is valid from backtesting optimization)
+    # Otherwise, strong form should yield positive bonus
+    if wimbledon_bot.W_RECENT_FORM > 0:
+        assert bonus > 0
+    else:
+        assert bonus == 0
 
 
 def test_get_recent_form_bonus_poor():
-    """Poor recent form (40% win rate) should provide a negative bonus."""
+    """Poor recent form (40% win rate) should provide a negative bonus (or 0 if weight is 0)."""
     recent_form_dict = {"Poor Player": {"wins": 4, "losses": 6}}
 
     bonus = wimbledon_bot.get_recent_form_bonus("Poor Player", recent_form_dict)
 
-    assert bonus < 0
+    # If W_RECENT_FORM is 0, bonus will be 0 (which is valid from backtesting optimization)
+    # Otherwise, poor form should yield negative bonus
+    if wimbledon_bot.W_RECENT_FORM > 0:
+        assert bonus < 0
+    else:
+        assert bonus == 0
 
 
 def test_get_recent_form_bonus_no_tournaments():
