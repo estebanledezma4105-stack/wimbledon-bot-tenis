@@ -273,6 +273,31 @@ def load_all_data(db_path):
             if p1_name and p2_name:
                 live_scores[f"{p1_name} vs {p2_name}"] = {"sets": row["sets"], "status": row["status"]}
 
+        ranking_dict = {}
+        for row in conn.execute(
+            "SELECT player_id, ranking_position, ranking_points FROM atp_rankings"
+        ).fetchall():
+            name = id_to_name.get(row["player_id"])
+            if name:
+                ranking_dict[name] = {
+                    "ranking_position": row["ranking_position"],
+                    "ranking_points": row["ranking_points"],
+                }
+
+        recent_form_dict = {}
+        for row in conn.execute(
+            "SELECT player_id, tournaments_played, wins, losses, titles, finals_reached FROM recent_form"
+        ).fetchall():
+            name = id_to_name.get(row["player_id"])
+            if name:
+                recent_form_dict[name] = {
+                    "tournaments_played": row["tournaments_played"],
+                    "wins": row["wins"],
+                    "losses": row["losses"],
+                    "titles": row["titles"],
+                    "finals_reached": row["finals_reached"],
+                }
+
         return {
             "elo": elo,
             "grass_stats": grass_stats,
@@ -281,6 +306,8 @@ def load_all_data(db_path):
             "draw": {"matches": matches, "completed_matches": [m for m in matches if m["winner"]]},
             "live_scores": live_scores,
             "fatigue": {p["name"]: get_games_played_in_last_match(db_path, p["id"]) for p in players},
+            "ranking_dict": ranking_dict,
+            "recent_form_dict": recent_form_dict,
         }
 
 

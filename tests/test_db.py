@@ -279,3 +279,60 @@ def test_upsert_recent_form_inserts_and_updates(test_db_path):
     assert rows[0]["titles"] == 2
     assert rows[0]["finals_reached"] == 3
     assert rows[0]["last_tournament_date"] == "2026-06-28"
+
+
+def test_load_all_data_includes_ranking_and_recent_form(test_db_path):
+    """Test that load_all_data() includes ranking_dict and recent_form_dict."""
+    db.init_db(test_db_path)
+
+    # Create players
+    p1 = db.upsert_player(test_db_path, name="Carlos Alcaraz", elo=2100, ranking=1)
+    p2 = db.upsert_player(test_db_path, name="Novak Djokovic", elo=2050, ranking=2)
+
+    # Insert ranking data
+    db.upsert_ranking(test_db_path, p1, ranking_position=1, ranking_points=10000)
+    db.upsert_ranking(test_db_path, p2, ranking_position=2, ranking_points=9500)
+
+    # Insert recent form data
+    db.upsert_recent_form(
+        test_db_path, p1,
+        tournaments_played=5,
+        wins=15,
+        losses=3,
+        titles=1,
+        finals_reached=2,
+        last_tournament_date="2026-06-15"
+    )
+    db.upsert_recent_form(
+        test_db_path, p2,
+        tournaments_played=4,
+        wins=12,
+        losses=2,
+        titles=0,
+        finals_reached=1,
+        last_tournament_date="2026-06-10"
+    )
+
+    # Load all data
+    data = db.load_all_data(test_db_path)
+
+    # Verify ranking_dict exists and has correct structure
+    assert "ranking_dict" in data
+    assert "Carlos Alcaraz" in data["ranking_dict"]
+    assert "Novak Djokovic" in data["ranking_dict"]
+    assert data["ranking_dict"]["Carlos Alcaraz"]["ranking_position"] == 1
+    assert data["ranking_dict"]["Carlos Alcaraz"]["ranking_points"] == 10000
+    assert data["ranking_dict"]["Novak Djokovic"]["ranking_position"] == 2
+    assert data["ranking_dict"]["Novak Djokovic"]["ranking_points"] == 9500
+
+    # Verify recent_form_dict exists and has correct structure
+    assert "recent_form_dict" in data
+    assert "Carlos Alcaraz" in data["recent_form_dict"]
+    assert "Novak Djokovic" in data["recent_form_dict"]
+    assert data["recent_form_dict"]["Carlos Alcaraz"]["tournaments_played"] == 5
+    assert data["recent_form_dict"]["Carlos Alcaraz"]["wins"] == 15
+    assert data["recent_form_dict"]["Carlos Alcaraz"]["losses"] == 3
+    assert data["recent_form_dict"]["Carlos Alcaraz"]["titles"] == 1
+    assert data["recent_form_dict"]["Carlos Alcaraz"]["finals_reached"] == 2
+    assert data["recent_form_dict"]["Novak Djokovic"]["tournaments_played"] == 4
+    assert data["recent_form_dict"]["Novak Djokovic"]["wins"] == 12
