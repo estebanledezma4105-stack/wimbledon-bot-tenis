@@ -199,3 +199,41 @@ def test_get_recent_form_bonus_no_tournaments():
     bonus = wimbledon_bot.get_recent_form_bonus("No History Player", recent_form_dict)
 
     assert abs(bonus) < 0.001
+
+
+def test_calculate_rating_includes_ranking_and_form():
+    """Test that calculate_rating() includes ranking and recent_form bonuses."""
+    # Set up data with all parameters
+    elo_dict = {"Carlos Alcaraz": 2100, "Mark Newcomer": 1500}
+    grass_stats = {
+        "Carlos Alcaraz": {"grass_winrate": 0.65, "total_winrate": 0.60},
+        "Mark Newcomer": {"grass_winrate": 0.50, "total_winrate": 0.45},
+    }
+    form_data = {"Carlos Alcaraz": 20, "Mark Newcomer": -10}
+    h2h = {}
+    ranking_dict = {"Carlos Alcaraz": 1, "Mark Newcomer": 50}
+    recent_form_dict = {
+        "Carlos Alcaraz": {"wins": 8, "losses": 2},
+        "Mark Newcomer": {"wins": 3, "losses": 7},
+    }
+    fatigue_data = {}
+
+    # Calculate rating for both players
+    rating_alcaraz = wimbledon_bot.calculate_rating(
+        "Carlos Alcaraz", "Mark Newcomer",
+        elo_dict, grass_stats, form_data, h2h, fatigue_data,
+        ranking_dict, recent_form_dict
+    )
+    rating_newcomer = wimbledon_bot.calculate_rating(
+        "Mark Newcomer", "Carlos Alcaraz",
+        elo_dict, grass_stats, form_data, h2h, fatigue_data,
+        ranking_dict, recent_form_dict
+    )
+
+    # Base ELO ratings
+    base_elo_alcaraz = elo_dict["Carlos Alcaraz"]
+    base_elo_newcomer = elo_dict["Mark Newcomer"]
+
+    # With positive bonuses, ratings should be > base ELO
+    assert rating_alcaraz > base_elo_alcaraz, "Alcaraz (top-ranked, good form) should have rating > base ELO"
+    assert rating_newcomer < base_elo_newcomer, "Newcomer (lower-ranked, poor form) should have rating < base ELO"

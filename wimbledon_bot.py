@@ -123,13 +123,15 @@ def get_recent_form_bonus(player_id, recent_form_dict):
         recent_win_pct = wins / total
     return W_RECENT_FORM * (recent_win_pct - 0.5) * 100
 
-def calculate_rating(player_id, opponent_id, elo_dict, grass_stats, form_data, h2h_data, fatigue_data=None):
+def calculate_rating(player_id, opponent_id, elo_dict, grass_stats, form_data, h2h_data, fatigue_data=None, ranking_dict=None, recent_form_dict=None):
     elo = elo_dict.get(player_id, 1500)
     grass = get_grass_bonus(player_id, grass_stats)
     form = get_form_bonus(player_id, form_data)
     h2h = get_h2h_bonus(player_id, opponent_id, h2h_data)
     fatigue = get_fatigue_bonus(player_id, fatigue_data or {})
-    return elo + grass + form + h2h + fatigue
+    ranking = get_ranking_bonus(player_id, ranking_dict or {})
+    recent = get_recent_form_bonus(player_id, recent_form_dict or {})
+    return elo + grass + form + h2h + fatigue + ranking + recent
 
 def predict_match(player_a, player_b, data):
     elo = data['elo']
@@ -137,8 +139,10 @@ def predict_match(player_a, player_b, data):
     form = data['form']
     h2h = data['h2h']
     fatigue = data.get('fatigue', {})
-    r_a = calculate_rating(player_a, player_b, elo, grass, form, h2h, fatigue)
-    r_b = calculate_rating(player_b, player_a, elo, grass, form, h2h, fatigue)
+    ranking_dict = data.get('ranking_dict', {})
+    recent_form_dict = data.get('recent_form_dict', {})
+    r_a = calculate_rating(player_a, player_b, elo, grass, form, h2h, fatigue, ranking_dict, recent_form_dict)
+    r_b = calculate_rating(player_b, player_a, elo, grass, form, h2h, fatigue, ranking_dict, recent_form_dict)
     prob_a = win_probability(r_a, r_b)
     return {
         'player_a': player_a,
