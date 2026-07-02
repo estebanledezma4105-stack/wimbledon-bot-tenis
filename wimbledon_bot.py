@@ -366,6 +366,35 @@ async def cmd_acierto(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 f"ganó {d['winner'].title()}\n")
     await update.message.reply_text(msg, parse_mode='Markdown')
 
+async def cmd_odds(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Show model prediction vs market odds."""
+    try:
+        texto = update.message.text.split(' ', 1)[1]
+        players = texto.split(' vs ')
+        if len(players) != 2:
+            raise ValueError
+        typed_a, typed_b = players[0], players[1]
+    except:
+        await update.message.reply_text("Formato: /odds Alcaraz vs Djokovic")
+        return
+
+    data = data_db.load_all_data(DB_PATH)
+    a = _resolve_player_name(typed_a, data['elo'])
+    b = _resolve_player_name(typed_b, data['elo'])
+    if a is None or b is None:
+        await update.message.reply_text("Uno de los jugadores no está en la base de datos.")
+        return
+
+    pred = predict_match(a, b, data)
+    model_prob_a = pred['prob_a']
+
+    validator = OddsValidator()
+    mensaje = (f"📊 *Odds vs Model*\n\n"
+               f"Model: {a.title()} {model_prob_a*100:.1f}%\n"
+               f"_(Odds data available when live)_")
+
+    await update.message.reply_text(mensaje, parse_mode='Markdown')
+
 # ===================== ENTRADA PRINCIPAL =====================
 def run_bot():
     if not TELEGRAM_TOKEN:
@@ -381,6 +410,7 @@ def run_bot():
     app.add_handler(CommandHandler("draw", cmd_draw))
     app.add_handler(CommandHandler("live", cmd_live))
     app.add_handler(CommandHandler("acierto", cmd_acierto))
+    app.add_handler(CommandHandler("odds", cmd_odds))
     logger.info("Bot iniciado. Pulsa Ctrl+C para detener.")
     app.run_polling()
 
