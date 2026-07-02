@@ -12,6 +12,8 @@ from datetime import date
 import db as data_db
 from predictions import SetsPrediction
 from odds_validator import OddsValidator
+from confidence import ConfidenceScorer
+from match_duration import MatchDuration
 
 
 def _load_dotenv(path=".env"):
@@ -226,6 +228,10 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🎾 *Bot Wimbledon 2026*\n\n"
         "/predict `JugadorA vs JugadorB`\n"
+        "/sets `JugadorA vs JugadorB` - Probabilidades por sets\n"
+        "/odds `JugadorA vs JugadorB` - Comparar vs odds del mercado\n"
+        "/confidence `Jugador` - Confianza de la predicción\n"
+        "/duracion `JugadorA vs JugadorB` - Duración estimada\n"
         "/partidos - Predicciones de los partidos pendientes\n"
         "/draw - Todos los partidos del cuadro\n"
         "/live - Resultados en vivo\n"
@@ -395,6 +401,65 @@ async def cmd_odds(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(mensaje, parse_mode='Markdown')
 
+async def cmd_confidence(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Show prediction confidence."""
+    try:
+        typed_player = update.message.text.split(' ', 1)[1]
+    except:
+        await update.message.reply_text("Formato: /confidence Alcaraz")
+        return
+
+    data = data_db.load_all_data(DB_PATH)
+    player = _resolve_player_name(typed_player, data['elo'])
+    if player is None:
+        await update.message.reply_text("Jugador no encontrado.")
+        return
+
+    player_data = {
+        'h2h_matches': 10,
+        'form_window_size': 5,
+        'grass_winrate': data.get('grass_stats', {}).get(player, {}).get('grass_winrate'),
+        'total_matches': 100,
+    }
+
+    scorer = ConfidenceScorer()
+    conf = scorer.score(player_data)
+    reasons_text = "\n".join([f"• {r}" for r in conf['reasons']])
+
+    mensaje = (f"📈 *Confianza: {player.title()}*\n\n"
+               f"Nivel: *{conf['level']}* ({conf['score']}/1.0)\n\n"
+               f"{reasons_text}")
+    await update.message.reply_text(mensaje, parse_mode='Markdown')
+
+async def cmd_duracion(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Estimate match duration."""
+    try:
+        texto = update.message.text.split(' ', 1)[1]
+        players = texto.split(' vs ')
+        if len(players) != 2:
+            raise ValueError
+        typed_a, typed_b = players[0], players[1]
+    except:
+        await update.message.reply_text("Formato: /duracion Alcaraz vs Djokovic")
+        return
+
+    data = data_db.load_all_data(DB_PATH)
+    a = _resolve_player_name(typed_a, data['elo'])
+    b = _resolve_player_name(typed_b, data['elo'])
+    if a is None or b is None:
+        await update.message.reply_text("Uno de los jugadores no está en la base de datos.")
+        return
+
+    duration_pred = MatchDuration()
+    est_minutes = duration_pred.estimate(a, b, [150], [180])
+    hours = est_minutes // 60
+    mins = est_minutes % 60
+
+    mensaje = (f"⏱ *Duración estimada*\n\n"
+               f"{a.title()} vs {b.title()}\n"
+               f"*{hours}h {mins}m* ({est_minutes} min)")
+    await update.message.reply_text(mensaje, parse_mode='Markdown')
+
 # ===================== ENTRADA PRINCIPAL =====================
 def run_bot():
     if not TELEGRAM_TOKEN:
@@ -411,6 +476,8 @@ def run_bot():
     app.add_handler(CommandHandler("live", cmd_live))
     app.add_handler(CommandHandler("acierto", cmd_acierto))
     app.add_handler(CommandHandler("odds", cmd_odds))
+    app.add_handler(CommandHandler("confidence", cmd_confidence))
+    app.add_handler(CommandHandler("duracion", cmd_duracion))
     logger.info("Bot iniciado. Pulsa Ctrl+C para detener.")
     app.run_polling()
 
