@@ -133,6 +133,50 @@ def init_db(db_path):
         except sqlite3.OperationalError:
             pass  # column already exists
 
+        # Add SetsPrediction table
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS SetsPrediction (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_a TEXT NOT NULL,
+                player_b TEXT NOT NULL,
+                match_date TEXT,
+                prob_3_0 REAL,
+                prob_3_1 REAL,
+                prob_3_2 REAL,
+                prob_2_3 REAL,
+                prob_1_3 REAL,
+                prob_0_3 REAL,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(player_a, player_b, match_date)
+            )
+        """)
+
+        # Add MatchDuration table
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS MatchDuration (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_a TEXT NOT NULL,
+                player_b TEXT NOT NULL,
+                estimated_minutes INTEGER,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(player_a, player_b)
+            )
+        """)
+
+        # Add OddsCache table
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS OddsCache (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_a TEXT NOT NULL,
+                player_b TEXT NOT NULL,
+                player_a_odds REAL,
+                player_b_odds REAL,
+                source TEXT,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(player_a, player_b, source)
+            )
+        """)
+
 
 def _now():
     return datetime.now(timezone.utc).isoformat()
@@ -396,4 +440,21 @@ def upsert_recent_form(db_path, player_id, tournaments_played, wins, losses, tit
                                                     last_tournament_date = excluded.last_tournament_date,
                                                     updated_at = excluded.updated_at""",
             (player_id, tournaments_played, wins, losses, titles, finals_reached, last_tournament_date, _now()),
+        )
+
+
+def upsert_sets_prediction(db_path, player_a, player_b, probs_dict, match_date=None):
+    """Insert or replace sets prediction probabilities for a match."""
+    with get_connection(db_path) as conn:
+        conn.execute(
+            """INSERT OR REPLACE INTO SetsPrediction
+               (player_a, player_b, match_date, prob_3_0, prob_3_1, prob_3_2, prob_2_3, prob_1_3, prob_0_3)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (player_a, player_b, match_date,
+             probs_dict.get('3-0'),
+             probs_dict.get('3-1'),
+             probs_dict.get('3-2'),
+             probs_dict.get('2-3'),
+             probs_dict.get('1-3'),
+             probs_dict.get('0-3')),
         )
