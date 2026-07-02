@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Read(//c/c/Users/esteb/OneDrive/Documentos/ESTEBAN - ALIAS SHAGY/PROGRAMACION/**)"
+      "Read(//c/c/Users/esteb/OneDrive/Documentos/ESTEBAN - ALIAS SHAGY/PROGRAMACION/**)",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__browser_batch"
     ]
   }
 }

@@ -3,13 +3,13 @@
 Resolution order:
 1. Exact match in the seed alias dictionary (data/player_aliases_seed.json).
 2. Exact match already recorded in player_aliases table.
-3. rapidfuzz match against known players.name, threshold > 90.
+3. Fuzzy match against known players.name, threshold > 0.9.
 4. Otherwise: record in unresolved_names, return None.
 """
+import difflib
 import json
 import os
 from datetime import datetime, timezone
-from rapidfuzz import fuzz, process
 
 import db
 
@@ -47,9 +47,9 @@ def resolve(db_path, raw_name, source):
         known_names = [row["name"] for row in conn.execute("SELECT name FROM players").fetchall()]
 
     if known_names:
-        match = process.extractOne(raw_name, known_names, scorer=fuzz.ratio)
-        if match and match[1] > FUZZY_THRESHOLD:
-            canonical = match[0]
+        matches = difflib.get_close_matches(raw_name, known_names, n=1, cutoff=FUZZY_THRESHOLD/100)
+        if matches:
+            canonical = matches[0]
             _record_alias(db_path, raw_name, canonical)
             return canonical
 

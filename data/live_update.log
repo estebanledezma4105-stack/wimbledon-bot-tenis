@@ -1,0 +1,575 @@
+2026-06-29 09:16:01,138 INFO OK live: 11 rows
+2026-06-29 09:21:33,793 INFO OK live: 12 rows
+2026-06-29 09:26:33,890 INFO OK live: 12 rows
+2026-06-29 09:31:33,869 INFO OK live: 13 rows
+2026-06-29 09:36:34,021 INFO OK live: 13 rows
+2026-06-29 09:41:35,420 INFO OK live: 13 rows
+2026-06-29 09:46:35,040 INFO OK live: 13 rows
+2026-06-29 09:49:50,368 INFO OK live: 13 rows
+2026-06-29 09:51:33,699 INFO OK live: 13 rows
+2026-06-29 09:56:34,303 INFO OK live: 13 rows
+2026-06-29 09:59:50,975 INFO OK live: 13 rows
+2026-06-29 09:59:52,585 INFO OK predictions: 10 winners backfilled, 57 new predictions logged
+2026-06-29 10:01:33,707 INFO OK live: 13 rows
+2026-06-29 10:01:34,329 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 10:11:34,251 INFO OK live: 13 rows
+2026-06-29 10:11:35,028 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 10:16:34,736 INFO OK live: 13 rows
+2026-06-29 10:16:35,902 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 10:21:34,469 INFO OK live: 15 rows
+2026-06-29 10:21:35,632 INFO OK predictions: 2 winners backfilled, 0 new predictions logged
+2026-06-29 10:26:34,282 INFO OK live: 15 rows
+2026-06-29 10:26:35,123 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 10:31:34,198 INFO OK live: 15 rows
+2026-06-29 10:31:35,124 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 10:36:34,251 INFO OK live: 15 rows
+2026-06-29 10:36:35,122 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 10:41:34,546 INFO OK live: 16 rows
+2026-06-29 10:41:35,503 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-29 10:46:34,152 INFO OK live: 16 rows
+2026-06-29 10:46:34,977 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 10:51:34,222 INFO OK live: 16 rows
+2026-06-29 10:51:35,015 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 10:56:34,054 INFO OK live: 16 rows
+2026-06-29 10:56:34,993 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 11:11:36,507 INFO OK live: 19 rows
+2026-06-29 11:11:37,776 INFO OK predictions: 3 winners backfilled, 0 new predictions logged
+2026-06-29 11:16:33,229 INFO OK live: 19 rows
+2026-06-29 11:16:34,443 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 11:21:33,263 INFO OK live: 19 rows
+2026-06-29 11:21:34,210 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 11:26:37,588 INFO OK live: 19 rows
+2026-06-29 11:26:38,613 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 11:31:32,956 INFO OK live: 20 rows
+2026-06-29 11:31:33,802 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-29 11:36:33,166 INFO OK live: 20 rows
+2026-06-29 11:36:33,975 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 11:41:33,119 INFO OK live: 21 rows
+2026-06-29 11:41:33,911 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-29 11:46:33,246 INFO OK live: 21 rows
+2026-06-29 11:46:34,261 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 11:51:35,004 INFO OK live: 21 rows
+2026-06-29 11:51:41,564 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 11:56:33,359 INFO OK live: 21 rows
+2026-06-29 11:56:34,333 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 12:01:33,708 INFO OK live: 23 rows
+2026-06-29 12:06:33,173 INFO OK live: 23 rows
+2026-06-29 12:06:34,134 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 12:57:47,617 INFO OK live: 27 rows
+2026-06-29 12:57:50,837 INFO OK predictions: 4 winners backfilled, 0 new predictions logged
+2026-06-29 13:06:34,103 INFO OK live: 28 rows
+2026-06-29 13:06:36,227 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-29 13:11:33,635 INFO OK live: 28 rows
+2026-06-29 13:11:34,472 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:16:33,753 INFO OK live: 28 rows
+2026-06-29 13:16:34,747 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:21:33,593 INFO OK live: 28 rows
+2026-06-29 13:21:34,382 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:26:33,653 INFO OK live: 28 rows
+2026-06-29 13:26:34,424 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:31:33,790 INFO OK live: 28 rows
+2026-06-29 13:31:34,569 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:36:33,700 INFO OK live: 28 rows
+2026-06-29 13:36:34,462 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:41:34,029 INFO OK live: 28 rows
+2026-06-29 13:41:35,479 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:46:33,332 INFO OK live: 28 rows
+2026-06-29 13:46:34,127 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:51:33,327 INFO OK live: 28 rows
+2026-06-29 13:51:33,931 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 13:56:33,566 INFO OK live: 28 rows
+2026-06-29 13:56:34,443 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:01:33,737 INFO OK live: 28 rows
+2026-06-29 14:01:39,653 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:06:33,440 INFO OK live: 28 rows
+2026-06-29 14:06:34,213 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:11:34,607 INFO OK live: 28 rows
+2026-06-29 14:11:35,819 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:16:33,895 INFO OK live: 28 rows
+2026-06-29 14:16:35,030 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:21:33,625 INFO OK live: 29 rows
+2026-06-29 14:21:34,250 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-29 14:26:33,393 INFO OK live: 29 rows
+2026-06-29 14:26:33,944 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:31:33,459 INFO OK live: 29 rows
+2026-06-29 14:31:34,003 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:36:33,366 INFO OK live: 29 rows
+2026-06-29 14:36:33,910 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:41:33,377 INFO OK live: 29 rows
+2026-06-29 14:41:33,918 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:46:33,420 INFO OK live: 29 rows
+2026-06-29 14:46:33,993 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:51:33,182 INFO OK live: 30 rows
+2026-06-29 14:51:33,774 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 14:56:33,421 INFO OK live: 30 rows
+2026-06-29 14:56:34,008 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:01:33,552 INFO OK live: 30 rows
+2026-06-29 15:01:34,240 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:06:33,638 INFO OK live: 30 rows
+2026-06-29 15:06:34,230 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:11:33,975 INFO OK live: 29 rows
+2026-06-29 15:11:34,770 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:16:33,500 INFO OK live: 29 rows
+2026-06-29 15:16:34,052 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:21:33,356 INFO OK live: 29 rows
+2026-06-29 15:21:33,924 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:26:33,461 INFO OK live: 29 rows
+2026-06-29 15:26:34,112 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:31:33,536 INFO OK live: 29 rows
+2026-06-29 15:31:34,114 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:36:33,447 INFO OK live: 29 rows
+2026-06-29 15:36:34,046 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:41:33,474 INFO OK live: 29 rows
+2026-06-29 15:41:34,085 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:46:33,528 INFO OK live: 29 rows
+2026-06-29 15:46:34,155 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:51:33,409 INFO OK live: 29 rows
+2026-06-29 15:51:34,012 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 15:56:33,253 INFO OK live: 29 rows
+2026-06-29 15:56:33,848 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:01:33,644 INFO OK live: 29 rows
+2026-06-29 16:01:34,263 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:06:33,595 INFO OK live: 29 rows
+2026-06-29 16:06:34,177 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:11:33,455 INFO OK live: 29 rows
+2026-06-29 16:11:34,174 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:16:33,634 INFO OK live: 29 rows
+2026-06-29 16:16:34,225 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:21:33,501 INFO OK live: 29 rows
+2026-06-29 16:21:34,112 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:26:33,623 INFO OK live: 29 rows
+2026-06-29 16:26:34,233 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:31:33,460 INFO OK live: 30 rows
+2026-06-29 16:31:34,070 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-29 16:36:33,558 INFO OK live: 30 rows
+2026-06-29 16:36:34,156 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:41:33,568 INFO OK live: 30 rows
+2026-06-29 16:41:34,168 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:46:33,652 INFO OK live: 30 rows
+2026-06-29 16:46:34,237 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:51:33,746 INFO OK live: 30 rows
+2026-06-29 16:51:34,338 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 16:56:33,481 INFO OK live: 30 rows
+2026-06-29 16:56:34,074 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:01:33,395 INFO OK live: 2 rows
+2026-06-29 17:01:33,978 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:06:33,475 INFO OK live: 2 rows
+2026-06-29 17:06:34,116 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:11:33,358 INFO OK live: 2 rows
+2026-06-29 17:11:33,960 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:16:33,546 INFO OK live: 2 rows
+2026-06-29 17:16:34,217 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:21:33,458 INFO OK live: 2 rows
+2026-06-29 17:21:34,097 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:32:24,537 INFO OK live: 2 rows
+2026-06-29 17:32:25,498 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:36:36,149 INFO OK live: 2 rows
+2026-06-29 17:36:36,822 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:46:33,732 INFO OK live: 2 rows
+2026-06-29 17:46:34,427 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 17:51:33,637 INFO OK live: 2 rows
+2026-06-29 17:51:34,250 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 18:01:33,755 INFO OK live: 2 rows
+2026-06-29 18:01:34,422 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 18:06:33,687 INFO OK live: 2 rows
+2026-06-29 18:06:34,382 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 18:11:33,700 INFO OK live: 2 rows
+2026-06-29 18:11:34,529 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 18:32:50,191 INFO OK live: 2 rows
+2026-06-29 18:32:51,279 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 18:46:34,415 INFO OK live: 2 rows
+2026-06-29 18:51:34,145 INFO OK live: 2 rows
+2026-06-29 18:56:33,294 INFO OK live: 2 rows
+2026-06-29 18:56:34,282 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:06:33,051 INFO OK live: 2 rows
+2026-06-29 19:06:34,047 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:11:32,891 INFO OK live: 2 rows
+2026-06-29 19:11:33,576 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:16:33,157 INFO OK live: 2 rows
+2026-06-29 19:16:34,002 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:21:33,316 INFO OK live: 2 rows
+2026-06-29 19:21:34,196 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:26:33,864 INFO OK live: 2 rows
+2026-06-29 19:26:35,033 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:31:33,782 INFO OK live: 2 rows
+2026-06-29 19:31:35,035 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:36:33,225 INFO OK live: 2 rows
+2026-06-29 19:36:34,014 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:41:33,213 INFO OK live: 2 rows
+2026-06-29 19:41:34,183 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:46:32,985 INFO OK live: 2 rows
+2026-06-29 19:46:33,697 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:51:32,769 INFO OK live: 2 rows
+2026-06-29 19:51:33,361 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 19:56:34,149 INFO OK live: 2 rows
+2026-06-29 19:56:39,428 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 20:01:33,416 INFO OK live: 2 rows
+2026-06-29 20:01:36,982 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 20:06:34,297 INFO OK live: 2 rows
+2026-06-29 20:06:36,136 INFO OK predictions: 0 winners backfilled, 12 new predictions logged
+2026-06-29 20:11:32,401 INFO OK live: 2 rows
+2026-06-29 20:11:33,133 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 20:16:35,985 INFO OK live: 2 rows
+2026-06-29 20:16:38,893 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 20:21:38,620 INFO OK live: 2 rows
+2026-06-29 20:21:39,331 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 20:26:33,861 INFO OK live: 2 rows
+2026-06-29 20:26:35,268 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 20:52:53,535 INFO OK live: 2 rows
+2026-06-29 20:52:55,102 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 20:56:34,002 INFO OK live: 2 rows
+2026-06-29 20:56:35,168 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:01:35,038 INFO OK live: 2 rows
+2026-06-29 21:01:35,947 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:06:33,639 INFO OK live: 2 rows
+2026-06-29 21:06:34,309 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:11:33,945 INFO OK live: 2 rows
+2026-06-29 21:11:34,639 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:16:33,867 INFO OK live: 2 rows
+2026-06-29 21:16:34,461 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:21:34,063 INFO OK live: 2 rows
+2026-06-29 21:21:34,894 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:26:35,870 INFO OK live: 2 rows
+2026-06-29 21:26:37,253 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:31:35,290 INFO OK live: 2 rows
+2026-06-29 21:31:36,120 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:36:34,081 INFO OK live: 2 rows
+2026-06-29 21:36:34,872 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:41:34,191 INFO OK live: 2 rows
+2026-06-29 21:41:35,123 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:46:33,860 INFO OK live: 2 rows
+2026-06-29 21:46:34,526 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:51:33,882 INFO OK live: 2 rows
+2026-06-29 21:51:34,538 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 21:56:34,200 INFO OK live: 2 rows
+2026-06-29 21:56:34,968 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:01:33,816 INFO OK live: 2 rows
+2026-06-29 22:01:34,494 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:06:34,186 INFO OK live: 2 rows
+2026-06-29 22:06:34,955 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:11:33,928 INFO OK live: 2 rows
+2026-06-29 22:11:34,660 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:16:34,550 INFO OK live: 2 rows
+2026-06-29 22:16:35,526 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:26:34,128 INFO OK live: 2 rows
+2026-06-29 22:31:34,820 INFO OK live: 2 rows
+2026-06-29 22:31:35,930 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:36:34,590 INFO OK live: 2 rows
+2026-06-29 22:36:35,357 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:41:33,480 INFO OK live: 2 rows
+2026-06-29 22:41:34,322 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:46:33,277 INFO OK live: 2 rows
+2026-06-29 22:46:34,408 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:51:33,378 INFO OK live: 2 rows
+2026-06-29 22:51:34,179 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 22:56:33,881 INFO OK live: 2 rows
+2026-06-29 22:56:34,993 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 23:01:33,291 INFO OK live: 2 rows
+2026-06-29 23:01:34,291 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 23:06:33,292 INFO OK live: 2 rows
+2026-06-29 23:06:34,259 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 23:11:33,494 INFO OK live: 2 rows
+2026-06-29 23:11:34,538 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 23:16:32,795 INFO OK live: 2 rows
+2026-06-29 23:16:33,533 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 23:21:33,447 INFO OK live: 2 rows
+2026-06-29 23:21:34,221 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 23:26:33,490 INFO OK live: 2 rows
+2026-06-29 23:26:34,253 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-29 23:31:33,229 INFO OK live: 2 rows
+2026-06-29 23:31:34,025 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 11:22:39,651 INFO OK live: 18 rows
+2026-06-30 11:23:17,005 INFO OK predictions: 17 winners backfilled, 0 new predictions logged
+2026-06-30 11:26:38,770 INFO OK live: 18 rows
+2026-06-30 11:26:42,976 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 11:31:45,527 INFO OK live: 19 rows
+2026-06-30 11:32:02,486 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-30 11:36:37,617 INFO OK live: 19 rows
+2026-06-30 11:36:43,506 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 11:41:33,673 INFO OK live: 20 rows
+2026-06-30 11:41:34,914 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-30 12:31:52,313 INFO OK live: 23 rows
+2026-06-30 12:31:53,848 INFO OK predictions: 3 winners backfilled, 0 new predictions logged
+2026-06-30 12:36:33,121 INFO OK live: 23 rows
+2026-06-30 12:36:33,850 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 12:41:33,647 INFO OK live: 23 rows
+2026-06-30 12:41:34,467 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 12:51:36,748 INFO OK live: 23 rows
+2026-06-30 12:51:43,623 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 13:16:36,038 INFO OK live: 24 rows
+2026-06-30 13:16:38,706 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-06-30 13:36:35,542 INFO OK live: 27 rows
+2026-06-30 13:36:38,831 INFO OK predictions: 3 winners backfilled, 0 new predictions logged
+2026-06-30 13:41:35,360 INFO OK live: 27 rows
+2026-06-30 13:41:37,227 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 13:46:35,539 INFO OK live: 27 rows
+2026-06-30 13:46:37,644 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 13:51:35,407 INFO OK live: 28 rows
+2026-06-30 13:51:37,565 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 13:56:35,798 INFO OK live: 28 rows
+2026-06-30 13:56:37,938 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 14:31:36,761 INFO OK live: 30 rows
+2026-06-30 14:31:42,661 INFO OK predictions: 3 winners backfilled, 0 new predictions logged
+2026-06-30 14:46:35,903 INFO OK live: 31 rows
+2026-06-30 14:46:38,606 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 14:51:35,435 INFO OK live: 31 rows
+2026-06-30 14:51:37,289 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 19:02:14,679 INFO OK live: 3 rows
+2026-06-30 19:02:15,577 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 19:51:32,477 INFO OK live: 3 rows
+2026-06-30 19:51:34,797 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 19:56:32,525 INFO OK live: 3 rows
+2026-06-30 19:56:33,124 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:01:32,927 INFO OK live: 3 rows
+2026-06-30 20:01:36,037 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:06:32,837 INFO OK live: 3 rows
+2026-06-30 20:06:33,547 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:16:35,989 INFO OK live: 3 rows
+2026-06-30 20:16:38,860 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:21:33,760 INFO OK live: 3 rows
+2026-06-30 20:21:35,104 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:26:32,936 INFO OK live: 3 rows
+2026-06-30 20:26:33,769 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:31:32,761 INFO OK live: 3 rows
+2026-06-30 20:31:33,400 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:36:32,693 INFO OK live: 3 rows
+2026-06-30 20:36:33,321 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:41:32,727 INFO OK live: 3 rows
+2026-06-30 20:41:33,420 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:46:32,664 INFO OK live: 3 rows
+2026-06-30 20:46:33,288 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:51:32,806 INFO OK live: 3 rows
+2026-06-30 20:51:33,419 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 20:56:32,633 INFO OK live: 3 rows
+2026-06-30 20:56:33,246 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:01:32,828 INFO OK live: 3 rows
+2026-06-30 21:01:33,586 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:06:32,799 INFO OK live: 3 rows
+2026-06-30 21:06:33,793 INFO OK predictions: 0 winners backfilled, 15 new predictions logged
+2026-06-30 21:11:33,349 INFO OK live: 3 rows
+2026-06-30 21:11:34,173 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:16:32,982 INFO OK live: 3 rows
+2026-06-30 21:16:33,596 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:21:32,743 INFO OK live: 3 rows
+2026-06-30 21:21:33,369 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:26:33,056 INFO OK live: 3 rows
+2026-06-30 21:26:33,814 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:31:32,941 INFO OK live: 3 rows
+2026-06-30 21:31:33,583 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:36:32,909 INFO OK live: 3 rows
+2026-06-30 21:36:33,523 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:41:32,857 INFO OK live: 3 rows
+2026-06-30 21:41:33,484 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:46:33,082 INFO OK live: 3 rows
+2026-06-30 21:46:33,870 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:51:32,801 INFO OK live: 3 rows
+2026-06-30 21:51:33,597 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 21:56:32,778 INFO OK live: 3 rows
+2026-06-30 21:56:33,366 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:01:32,704 INFO OK live: 3 rows
+2026-06-30 22:01:33,310 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:06:33,150 INFO OK live: 3 rows
+2026-06-30 22:06:33,854 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:11:32,893 INFO OK live: 3 rows
+2026-06-30 22:11:33,491 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:16:33,175 INFO OK live: 3 rows
+2026-06-30 22:16:33,777 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:21:33,028 INFO OK live: 3 rows
+2026-06-30 22:21:33,680 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:26:32,994 INFO OK live: 3 rows
+2026-06-30 22:26:33,592 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:31:34,410 INFO OK live: 3 rows
+2026-06-30 22:31:36,793 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:36:34,258 INFO OK live: 3 rows
+2026-06-30 22:36:38,677 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:41:33,064 INFO OK live: 3 rows
+2026-06-30 22:41:35,830 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-06-30 22:46:33,031 INFO OK live: 3 rows
+2026-06-30 22:51:33,099 INFO OK live: 3 rows
+2026-06-30 22:56:33,180 INFO OK live: 3 rows
+2026-06-30 22:56:34,037 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 11:16:37,101 INFO OK live: 12 rows
+2026-07-01 11:16:49,590 INFO OK predictions: 12 winners backfilled, 0 new predictions logged
+2026-07-01 12:13:18,403 INFO OK live: 14 rows
+2026-07-01 12:13:27,072 INFO OK predictions: 2 winners backfilled, 0 new predictions logged
+2026-07-01 12:21:37,585 INFO OK live: 15 rows
+2026-07-01 12:21:38,488 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-07-01 13:26:32,785 INFO OK live: 15 rows
+2026-07-01 13:26:34,250 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 13:36:32,599 INFO OK live: 16 rows
+2026-07-01 13:36:33,253 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 13:41:32,547 INFO OK live: 15 rows
+2026-07-01 13:41:33,125 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 13:46:33,813 INFO OK live: 15 rows
+2026-07-01 13:46:34,405 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 13:51:32,990 INFO OK live: 15 rows
+2026-07-01 13:51:33,753 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 14:11:33,580 INFO OK live: 15 rows
+2026-07-01 14:11:34,952 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 14:41:32,749 INFO OK live: 16 rows
+2026-07-01 14:41:33,589 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-07-01 14:46:32,592 INFO OK live: 16 rows
+2026-07-01 14:46:33,224 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 14:51:32,758 INFO OK live: 16 rows
+2026-07-01 14:51:33,339 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 14:56:32,795 INFO OK live: 16 rows
+2026-07-01 14:56:33,460 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 15:16:33,241 INFO OK live: 18 rows
+2026-07-01 15:16:34,352 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 15:26:32,886 INFO OK live: 18 rows
+2026-07-01 15:26:33,538 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 15:31:33,045 INFO OK live: 18 rows
+2026-07-01 15:31:33,726 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 15:40:49,843 INFO OK live: 19 rows
+2026-07-01 15:41:33,560 INFO OK live: 19 rows
+2026-07-01 15:41:34,547 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 16:01:41,240 INFO OK live: 17 rows
+2026-07-01 16:26:35,655 INFO OK live: 17 rows
+2026-07-01 16:26:38,022 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 17:56:36,132 INFO OK live: 2 rows
+2026-07-01 17:56:41,805 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 18:21:36,332 INFO OK live: 2 rows
+2026-07-01 18:21:41,436 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 18:46:33,887 INFO OK live: 2 rows
+2026-07-01 18:56:35,886 INFO OK live: 2 rows
+2026-07-01 18:56:45,199 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 19:01:33,829 INFO OK live: 2 rows
+2026-07-01 19:06:33,340 INFO OK live: 2 rows
+2026-07-01 19:06:34,135 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 19:11:33,397 INFO OK live: 2 rows
+2026-07-01 19:11:33,987 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 19:16:33,633 INFO OK live: 2 rows
+2026-07-01 19:16:34,337 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 19:21:33,368 INFO OK live: 2 rows
+2026-07-01 19:21:34,022 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 20:26:32,452 INFO OK live: 2 rows
+2026-07-01 20:26:33,381 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 20:36:33,129 INFO OK live: 2 rows
+2026-07-01 20:36:34,378 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 20:46:32,605 INFO OK live: 2 rows
+2026-07-01 20:46:34,741 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 21:01:32,482 INFO OK live: 2 rows
+2026-07-01 21:01:33,146 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 21:06:32,266 INFO OK live: 2 rows
+2026-07-01 21:06:32,890 INFO OK predictions: 0 winners backfilled, 9 new predictions logged
+2026-07-01 21:11:32,576 INFO OK live: 2 rows
+2026-07-01 21:16:32,674 INFO OK live: 2 rows
+2026-07-01 21:16:33,245 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 21:21:32,577 INFO OK live: 2 rows
+2026-07-01 21:21:33,120 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 21:31:32,581 INFO OK live: 2 rows
+2026-07-01 21:31:33,272 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 21:36:32,597 INFO OK live: 2 rows
+2026-07-01 21:36:33,200 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 21:41:32,497 INFO OK live: 2 rows
+2026-07-01 21:41:33,031 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 21:51:32,756 INFO OK live: 2 rows
+2026-07-01 21:51:33,333 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 21:56:32,402 INFO OK live: 2 rows
+2026-07-01 21:56:32,989 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 22:11:32,576 INFO OK live: 2 rows
+2026-07-01 22:16:32,629 INFO OK live: 2 rows
+2026-07-01 22:16:33,199 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 22:26:33,719 INFO OK live: 2 rows
+2026-07-01 22:26:34,281 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 22:31:33,446 INFO OK live: 2 rows
+2026-07-01 22:31:34,017 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 22:36:34,458 INFO OK live: 2 rows
+2026-07-01 22:36:35,010 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 22:41:32,974 INFO OK live: 2 rows
+2026-07-01 22:41:33,530 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 22:46:33,086 INFO OK live: 2 rows
+2026-07-01 22:46:33,646 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 23:42:39,400 INFO OK live: 2 rows
+2026-07-01 23:46:33,295 INFO OK live: 2 rows
+2026-07-01 23:46:34,075 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 23:51:33,222 INFO OK live: 2 rows
+2026-07-01 23:51:33,979 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-01 23:56:33,121 INFO OK live: 2 rows
+2026-07-01 23:56:33,876 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 00:01:32,883 INFO OK live: 2 rows
+2026-07-02 00:01:33,410 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 07:25:16,145 INFO OK live: 4 rows
+2026-07-02 07:25:23,480 INFO OK predictions: 2 winners backfilled, 0 new predictions logged
+2026-07-02 07:26:32,987 INFO OK live: 4 rows
+2026-07-02 07:26:33,505 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 07:31:43,915 INFO OK live: 4 rows
+2026-07-02 07:31:46,500 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 07:36:33,366 INFO OK live: 4 rows
+2026-07-02 07:36:34,118 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 07:41:33,482 INFO OK live: 3 rows
+2026-07-02 07:41:34,056 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 07:46:34,661 INFO OK live: 3 rows
+2026-07-02 07:46:35,190 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 07:51:33,242 INFO OK live: 2 rows
+2026-07-02 07:51:33,805 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 07:56:33,255 INFO OK live: 2 rows
+2026-07-02 07:56:33,793 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:01:33,688 INFO OK live: 2 rows
+2026-07-02 08:01:36,812 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:06:32,983 INFO OK live: 2 rows
+2026-07-02 08:06:33,857 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:11:35,518 INFO OK live: 3 rows
+2026-07-02 08:11:37,401 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-07-02 08:16:33,608 INFO OK live: 3 rows
+2026-07-02 08:16:34,943 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:21:33,388 INFO OK live: 3 rows
+2026-07-02 08:21:34,281 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:26:34,001 INFO OK live: 3 rows
+2026-07-02 08:26:34,865 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:31:33,769 INFO OK live: 3 rows
+2026-07-02 08:31:34,502 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:36:33,745 INFO OK live: 3 rows
+2026-07-02 08:36:34,437 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:41:33,351 INFO OK live: 3 rows
+2026-07-02 08:41:34,070 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:46:33,360 INFO OK live: 3 rows
+2026-07-02 08:46:33,922 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 08:51:33,276 INFO OK live: 5 rows
+2026-07-02 08:51:34,012 INFO OK predictions: 2 winners backfilled, 0 new predictions logged
+2026-07-02 08:56:33,647 INFO OK live: 5 rows
+2026-07-02 08:56:34,369 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 09:01:34,829 INFO OK live: 5 rows
+2026-07-02 09:01:35,563 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 09:06:33,719 INFO OK live: 5 rows
+2026-07-02 09:06:34,522 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 09:11:34,766 INFO OK live: 5 rows
+2026-07-02 09:11:35,615 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 09:16:33,995 INFO OK live: 5 rows
+2026-07-02 09:16:34,766 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 09:21:35,143 INFO OK live: 5 rows
+2026-07-02 09:21:35,893 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 09:31:33,832 INFO OK live: 5 rows
+2026-07-02 09:31:33,838 ERROR FAILED predictions: unterminated f-string literal (detected at line 485) (wimbledon_bot.py, line 485)
+2026-07-02 09:36:33,295 INFO OK live: 5 rows
+2026-07-02 09:36:33,928 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 09:41:35,110 INFO OK live: 7 rows
+2026-07-02 09:41:35,719 INFO OK predictions: 2 winners backfilled, 0 new predictions logged
+2026-07-02 09:46:34,123 INFO OK live: 7 rows
+2026-07-02 09:46:34,685 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 09:51:34,799 INFO OK live: 7 rows
+2026-07-02 09:51:35,370 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 10:26:33,855 INFO OK live: 8 rows
+2026-07-02 10:26:34,942 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-07-02 10:31:34,635 INFO OK live: 9 rows
+2026-07-02 10:31:36,100 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-07-02 10:36:35,498 INFO OK live: 9 rows
+2026-07-02 10:36:41,551 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 10:46:33,889 INFO OK live: 9 rows
+2026-07-02 10:46:37,183 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 10:51:34,038 INFO OK live: 9 rows
+2026-07-02 10:51:34,802 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 10:56:33,819 INFO OK live: 9 rows
+2026-07-02 10:56:34,546 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 11:01:35,201 INFO OK live: 9 rows
+2026-07-02 11:01:35,984 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 11:06:33,794 INFO OK live: 9 rows
+2026-07-02 11:06:34,523 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 11:11:33,816 INFO OK live: 9 rows
+2026-07-02 11:11:34,648 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 11:16:34,451 INFO OK live: 9 rows
+2026-07-02 11:16:35,189 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
+2026-07-02 11:21:34,167 INFO OK live: 10 rows
+2026-07-02 11:21:34,961 INFO OK predictions: 1 winners backfilled, 0 new predictions logged
+2026-07-02 11:31:34,513 INFO OK live: 10 rows
+2026-07-02 11:31:35,521 INFO OK predictions: 0 winners backfilled, 0 new predictions logged
