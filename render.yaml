@@ -2,7 +2,7 @@ services:
   - type: worker
     name: wimbledon-bot-tenis
     runtime: python311
-    buildCommand: pip install --prefer-binary -r requirements.txt
+    buildCommand: pip install --prefer-binary python-telegram-bot==22.8
     startCommand: python wimbledon_bot.py
     envVars:
       - key: TELEGRAM_TOKEN
