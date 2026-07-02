@@ -10,6 +10,8 @@ import logging
 from datetime import date
 
 import db as data_db
+from predictions import SetsPrediction
+from odds_validator import OddsValidator
 
 
 def _load_dotenv(path=".env"):
@@ -154,12 +156,20 @@ def predict_match(player_a, player_b, data):
     r_a = calculate_rating(player_a, player_b, elo, grass, form, h2h, fatigue, ranking_dict, recent_form_dict)
     r_b = calculate_rating(player_b, player_a, elo, grass, form, h2h, fatigue, ranking_dict, recent_form_dict)
     prob_a = win_probability(r_a, r_b)
+
+    # NEW: Calculate sets probabilities
+    sets_pred = SetsPrediction()
+    set_probs = {}
+    for score in ['3-0', '3-1', '3-2', '2-3', '1-3', '0-3']:
+        set_probs[score] = sets_pred.match_score_probability(prob_a, score)
+
     return {
         'player_a': player_a,
         'player_b': player_b,
         'prob_a': round(prob_a, 3),
         'prob_b': round(1 - prob_a, 3),
-        'favorite': player_a if prob_a >= 0.5 else player_b
+        'favorite': player_a if prob_a >= 0.5 else player_b,
+        'set_probabilities': {k: round(v, 3) for k, v in set_probs.items()}
     }
 
 def update_elo_ratings(winner_id, loser_id, elo_dict, K=K_ELO):
