@@ -87,3 +87,24 @@ def log_pending_predictions(db_path):
 def compute_accuracy(db_path):
     """Returns (correct, total, details) — see db.get_accuracy_stats."""
     return db.get_accuracy_stats(db_path)
+
+
+class SetsPrediction:
+    def set_win_probability(self, match_prob: float) -> float:
+        return match_prob
+
+    def match_score_probability(self, set_win_prob: float, score: str) -> float:
+        if score == "3-0":
+            return set_win_prob ** 3
+        elif score == "3-1":
+            return 3 * (set_win_prob ** 3) * (1 - set_win_prob)
+        elif score == "3-2":
+            return 6 * (set_win_prob ** 3) * ((1 - set_win_prob) ** 2)
+        elif score == "2-3":
+            return 6 * ((1 - set_win_prob) ** 3) * (set_win_prob ** 2)
+        elif score == "1-3":
+            return 3 * ((1 - set_win_prob) ** 3) * set_win_prob
+        elif score == "0-3":
+            return (1 - set_win_prob) ** 3
+        else:
+            raise ValueError(f"Invalid score: {score}")
