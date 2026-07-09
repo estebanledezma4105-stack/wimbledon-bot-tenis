@@ -23,21 +23,21 @@ def load_fixtures(db_path):
             {
                 "player1": "Alcaraz",
                 "player2": "Sinner",
-                "date": (today + timedelta(days=1)).isoformat(),
+                "date": today.isoformat(),
                 "tournament": "ATP 250",
                 "round": "Quarterfinals"
             },
             {
                 "player1": "Djokovic",
                 "player2": "Musetti",
-                "date": (today + timedelta(days=1)).isoformat(),
+                "date": today.isoformat(),
                 "tournament": "ATP 250",
                 "round": "Quarterfinals"
             },
             {
                 "player1": "Nadal",
                 "player2": "Rublev",
-                "date": (today + timedelta(days=2)).isoformat(),
+                "date": today.isoformat(),
                 "tournament": "ATP 500",
                 "round": "Semifinals"
             }
