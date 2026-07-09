@@ -46,15 +46,15 @@ def load_fixtures(db_path):
         with db.get_connection(db_path) as conn:
             loaded_count = 0
             for match in sample_matches:
-                # Get player IDs
+                # Get player IDs - search without .lower() since names in DB use mixed case
                 p1_row = conn.execute(
                     "SELECT id FROM players WHERE name = ?",
-                    (match["player1"].lower(),)
+                    (match["player1"],)
                 ).fetchone()
 
                 p2_row = conn.execute(
                     "SELECT id FROM players WHERE name = ?",
-                    (match["player2"].lower(),)
+                    (match["player2"],)
                 ).fetchone()
 
                 if p1_row and p2_row:

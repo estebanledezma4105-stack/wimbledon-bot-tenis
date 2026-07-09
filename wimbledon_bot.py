@@ -223,7 +223,10 @@ def update_form():
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -500,6 +503,23 @@ def run_bot():
             "TELEGRAM_TOKEN no está configurado. Define la variable de entorno "
             "TELEGRAM_TOKEN con el token de @BotFather antes de ejecutar el bot."
         )
+
+    # ===== SMOKE TESTS =====
+    logger.info("Running smoke tests...")
+    try:
+        data = data_db.load_all_data(DB_PATH)
+        matches = data.get('draw', {}).get('matches', [])
+        logger.info(f"✓ Database loaded: {len(matches)} matches found")
+
+        if not matches:
+            logger.warning("⚠ WARNING: No matches loaded - bot will have limited functionality")
+        else:
+            logger.info(f"✓ Loaded fixtures from {len(set(m.get('scheduled_date') for m in matches))} different dates")
+    except Exception as e:
+        logger.error(f"✗ SMOKE TEST FAILED: {e}")
+        raise
+    # ===== END SMOKE TESTS =====
+
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("predict", cmd_predict))
