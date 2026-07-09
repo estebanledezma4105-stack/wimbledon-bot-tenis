@@ -8,30 +8,31 @@ logger = logging.getLogger(__name__)
 def ensure_players_exist(db_path):
     """Ensure required players exist in database. Create them if missing."""
     required_players = [
-        {"name": "Carlos Alcaraz", "country": "ESP"},
-        {"name": "Jannik Sinner", "country": "ITA"},
-        {"name": "Novak Djokovic", "country": "SRB"},
-        {"name": "Lorenzo Musetti", "country": "ITA"},
-        {"name": "Rafael Nadal", "country": "ESP"},
-        {"name": "Andrey Rublev", "country": "RUS"},
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Novak Djokovic",
+        "Lorenzo Musetti",
+        "Rafael Nadal",
+        "Andrey Rublev",
     ]
 
     with db.get_connection(db_path) as conn:
-        for player in required_players:
+        for player_name in required_players:
             existing = conn.execute(
                 "SELECT id FROM players WHERE name = ?",
-                (player["name"],)
+                (player_name,)
             ).fetchone()
 
             if not existing:
-                logger.info(f"Creating missing player: {player['name']}")
+                logger.info(f"Creating missing player: {player_name}")
                 try:
                     conn.execute(
-                        "INSERT INTO players (name, country) VALUES (?, ?)",
-                        (player["name"], player["country"])
+                        "INSERT INTO players (name, ranking, last_updated) VALUES (?, ?, ?)",
+                        (player_name, 999, datetime.now().isoformat())
                     )
+                    logger.info(f"  Successfully created {player_name}")
                 except Exception as e:
-                    logger.error(f"Failed to create player {player['name']}: {e}")
+                    logger.error(f"Failed to create player {player_name}: {e}")
 
 def load_fixtures(db_path):
     """Load upcoming ATP fixtures from Tennis Explorer API and insert into DB."""
