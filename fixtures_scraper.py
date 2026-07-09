@@ -1,5 +1,4 @@
 """Scraper for ATP tennis fixtures."""
-import requests
 import logging
 from datetime import datetime, timedelta
 import db
