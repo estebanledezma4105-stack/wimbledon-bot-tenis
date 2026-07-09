@@ -513,7 +513,7 @@ def run_bot():
     app.add_handler(CommandHandler("duracion", cmd_duracion))
 
     # Iniciar scheduler para actualizar datos cada 10 minutos
-    setup_scheduler()
+    setup_scheduler(DB_PATH)
 
     logger.info("Bot iniciado. Pulsa Ctrl+C para detener.")
     app.run_polling()
