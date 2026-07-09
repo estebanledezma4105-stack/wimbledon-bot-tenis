@@ -241,7 +241,8 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/draw - Todos los partidos del cuadro\n"
         "/live - Resultados en vivo\n"
         "/acierto - Historial de aciertos del modelo\n"
-        "/stats `Jugador` - Estadísticas completas",
+        "/stats `Jugador` - Estadísticas completas\n"
+        "/forceupdate - Cargar fixtures manualmente",
         parse_mode='Markdown'
     )
 
@@ -496,6 +497,21 @@ async def cmd_sets(update: Update, context: ContextTypes.DEFAULT_TYPE):
                f"*0-3:* {sets['0-3']*100:.1f}%")
     await update.message.reply_text(mensaje, parse_mode='Markdown')
 
+async def cmd_forceupdate(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Force load fixtures manually."""
+    logger.info("User requested /forceupdate")
+    await update.message.reply_text("Cargando fixtures... espera un momento...", parse_mode='Markdown')
+
+    try:
+        count = load_fixtures(DB_PATH)
+        if count > 0:
+            await update.message.reply_text(f"✓ Se cargaron {count} partidos correctamente", parse_mode='Markdown')
+        else:
+            await update.message.reply_text("⚠ No se cargaron partidos. Verifica los logs.", parse_mode='Markdown')
+    except Exception as e:
+        logger.error(f"Error in /forceupdate: {e}")
+        await update.message.reply_text(f"✗ Error: {e}", parse_mode='Markdown')
+
 # ===================== ENTRADA PRINCIPAL =====================
 def run_bot():
     if not TELEGRAM_TOKEN:
@@ -532,6 +548,7 @@ def run_bot():
     app.add_handler(CommandHandler("sets", cmd_sets))
     app.add_handler(CommandHandler("confidence", cmd_confidence))
     app.add_handler(CommandHandler("duracion", cmd_duracion))
+    app.add_handler(CommandHandler("forceupdate", cmd_forceupdate))
 
     # Cargar fixtures inmediatamente
     logger.info("Cargando fixtures iniciales...")
