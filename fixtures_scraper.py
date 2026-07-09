@@ -41,12 +41,22 @@ def load_fixtures(db_path):
         logger.info("STARTING FIXTURE LOADER")
         logger.info("=" * 70)
 
+        today = datetime.now().date()
+        today_iso = today.isoformat()
+        logger.info(f"Today's date: {today_iso}")
+
         # Ensure all required players exist (creates them if missing)
         logger.info("\n[STEP 0] Ensuring all required players exist...")
         ensure_players_exist(db_path)
 
-        today = datetime.now().date()
-        logger.info(f"Today's date: {today.isoformat()}")
+        # Clean up old fixtures for today to prevent duplicates
+        logger.info("\n[STEP 0.5] Cleaning up old fixtures for today...")
+        with db.get_connection(db_path) as conn:
+            conn.execute(
+                "DELETE FROM draw_matches WHERE scheduled_date = ?",
+                (today_iso,)
+            )
+            logger.info(f"  Cleaned up old fixtures for {today_iso}")
 
         # Sample matches for testing
         sample_matches = [
