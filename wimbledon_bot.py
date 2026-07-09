@@ -14,6 +14,7 @@ from predictions import SetsPrediction
 from odds_validator import OddsValidator
 from confidence import ConfidenceScorer
 from match_duration import MatchDuration
+from scheduler import setup_scheduler
 
 
 def _load_dotenv(path=".env"):
@@ -510,6 +511,10 @@ def run_bot():
     app.add_handler(CommandHandler("sets", cmd_sets))
     app.add_handler(CommandHandler("confidence", cmd_confidence))
     app.add_handler(CommandHandler("duracion", cmd_duracion))
+
+    # Iniciar scheduler para actualizar datos cada 10 minutos
+    setup_scheduler()
+
     logger.info("Bot iniciado. Pulsa Ctrl+C para detener.")
     app.run_polling()
 
