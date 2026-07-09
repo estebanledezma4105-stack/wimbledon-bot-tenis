@@ -21,22 +21,22 @@ def load_fixtures(db_path):
         # In production, connect to ATP/Tennis Explorer API
         sample_matches = [
             {
-                "player1": "Alcaraz",
-                "player2": "Sinner",
+                "player1": "Carlos Alcaraz",
+                "player2": "Jannik Sinner",
                 "date": today.isoformat(),
                 "tournament": "ATP 250",
                 "round": "Quarterfinals"
             },
             {
-                "player1": "Djokovic",
-                "player2": "Musetti",
+                "player1": "Novak Djokovic",
+                "player2": "Lorenzo Musetti",
                 "date": today.isoformat(),
                 "tournament": "ATP 250",
                 "round": "Quarterfinals"
             },
             {
-                "player1": "Nadal",
-                "player2": "Rublev",
+                "player1": "Rafael Nadal",
+                "player2": "Andrey Rublev",
                 "date": today.isoformat(),
                 "tournament": "ATP 500",
                 "round": "Semifinals"
@@ -44,6 +44,7 @@ def load_fixtures(db_path):
         ]
 
         with db.get_connection(db_path) as conn:
+            loaded_count = 0
             for match in sample_matches:
                 # Get player IDs
                 p1_row = conn.execute(
@@ -57,7 +58,6 @@ def load_fixtures(db_path):
                 ).fetchone()
 
                 if p1_row and p2_row:
-                    # Insert match if not already exists
                     conn.execute(
                         """INSERT OR IGNORE INTO draw_matches
                            (tournament_id, year, round, player1_id, player2_id, scheduled_date)
@@ -65,9 +65,13 @@ def load_fixtures(db_path):
                         (match["tournament"], 2026, match["round"],
                          p1_row["id"], p2_row["id"], match["date"])
                     )
+                    loaded_count += 1
+                    logger.info(f"Loaded match: {match['player1']} vs {match['player2']}")
+                else:
+                    logger.warning(f"Players not found: {match['player1']} ({p1_row}) vs {match['player2']} ({p2_row})")
 
-        logger.info(f"Loaded {len(sample_matches)} fixtures")
-        return len(sample_matches)
+        logger.info(f"Successfully loaded {loaded_count}/{len(sample_matches)} fixtures")
+        return loaded_count
 
     except Exception as e:
         logger.error(f"Error loading fixtures: {e}")
