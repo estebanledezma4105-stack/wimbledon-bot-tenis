@@ -512,6 +512,43 @@ async def cmd_forceupdate(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.error(f"Error in /forceupdate: {e}")
         await update.message.reply_text(f"✗ Error: {e}", parse_mode='Markdown')
 
+async def cmd_debug(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Debug prediction calculation."""
+    logger.info("User requested /debug")
+
+    try:
+        data = data_db.load_all_data(DB_PATH)
+
+        # Test prediction step by step
+        p1 = "Carlos Alcaraz"
+        p2 = "Jannik Sinner"
+
+        # Check if players exist
+        elo = data['elo']
+        p1_elo = elo.get(p1, None)
+        p2_elo = elo.get(p2, None)
+
+        msg = f"DEBUG: {p1} vs {p2}\n\n"
+        msg += f"P1 Elo: {p1_elo}\n"
+        msg += f"P2 Elo: {p2_elo}\n\n"
+
+        if p1_elo is None or p2_elo is None:
+            msg += "ERROR: Players not found in Elo dict"
+        else:
+            # Try prediction
+            pred = predict_match(p1, p2, data)
+            msg += f"Prob A: {pred['prob_a']*100:.1f}%\n"
+            msg += f"Prob B: {pred['prob_b']*100:.1f}%\n"
+            msg += f"Favorite: {pred['favorite']}\n\n"
+            msg += f"Set Probs: {pred['set_probabilities']}"
+
+        await update.message.reply_text(msg, parse_mode='Markdown')
+
+    except Exception as e:
+        logger.error(f"Error in /debug: {e}")
+        import traceback
+        await update.message.reply_text(f"✗ Error: {e}\n\n{traceback.format_exc()}", parse_mode='Markdown')
+
 # ===================== ENTRADA PRINCIPAL =====================
 def run_bot():
     if not TELEGRAM_TOKEN:
@@ -549,6 +586,7 @@ def run_bot():
     app.add_handler(CommandHandler("confidence", cmd_confidence))
     app.add_handler(CommandHandler("duracion", cmd_duracion))
     app.add_handler(CommandHandler("forceupdate", cmd_forceupdate))
+    app.add_handler(CommandHandler("debug", cmd_debug))
 
     # Cargar fixtures inmediatamente
     logger.info("Cargando fixtures iniciales...")
