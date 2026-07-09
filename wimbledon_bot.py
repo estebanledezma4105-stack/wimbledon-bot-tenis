@@ -15,6 +15,7 @@ from odds_validator import OddsValidator
 from confidence import ConfidenceScorer
 from match_duration import MatchDuration
 from scheduler import setup_scheduler
+from fixtures_scraper import load_fixtures
 
 
 def _load_dotenv(path=".env"):
@@ -511,6 +512,10 @@ def run_bot():
     app.add_handler(CommandHandler("sets", cmd_sets))
     app.add_handler(CommandHandler("confidence", cmd_confidence))
     app.add_handler(CommandHandler("duracion", cmd_duracion))
+
+    # Cargar fixtures inmediatamente
+    logger.info("Cargando fixtures iniciales...")
+    load_fixtures(DB_PATH)
 
     # Iniciar scheduler para actualizar datos cada 10 minutos
     setup_scheduler(DB_PATH)
